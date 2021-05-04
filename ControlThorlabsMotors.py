@@ -1,5 +1,5 @@
-import serial
 from pylab import floor
+import serial
 
 "**********************************************************************"
 "************************ Background functions ************************"
@@ -124,23 +124,9 @@ def write_to_device(bus, address, command):
 def read_pos(bus, address): # reads current position of motor k-th
     '''Reading function under development'''
     bus.write((str(address)+'gp').encode())
-    while True:
-        line = bus.readline() # read and return one line from the stream
-        print('-----')
-        print(line)
-        # leng = len(line)
-        hex = line[6:11] # hexa format, string format
-        angle = hexa_toangle(hex) # angle in number format
-        print('-----')
-        print(angle)
-        if angle > 360:
-            angle = line[6:11] # hexa format, string format
-            angle = hexa_toangle(line_read) - hexa_toangle('FFFFF')
-            angle = round(angle, 3)
-        if (str(address) in str(line)):
-            break
-        else:
-            time.sleep(.05)
+    line = bus.readline() # read and return one line from the stream
+    hex = line[6:13] # hexa format, string format
+    angle = hexa_toangle(hex) # angle in number format
     return angle
 
 "*******************************************************************"
@@ -157,10 +143,6 @@ def do_home(motor, k): # homes motor clockwise
     write_to_device(motor, k, str(k)+'ho1') # 'ho0' clockwise, 'ho1' counter clockwise
     read_pos(motor,k)
 
-def move_rel(motor, k, angle_degrees):
-    '''move relative positive angles'''
-    write_to_device(motor, k, str(k)+'mr'+to8_format(angle_tohexa(angle_degrees)))
-
 def move_abs(bus, address, angle_degrees):
     '''
     Move to an absolute positive angle
@@ -171,21 +153,46 @@ def move_abs(bus, address, angle_degrees):
     address : Positive integer which specifies the bus address of the device
     angle_degrees : Value for absolute positive angle
     '''
-    print('move '+str(address)+' to: ', round(angle_degrees,2))
+    print('move '+str(address)+' to: ', round(angle_degrees, 2))
     command = str(address)+'ma'+to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
     read_pos(bus, address)
 
-def move_fw(motor, k, angle_degrees):
-    '''moves forward'''
-    print('move '+str(k)+' fw: ', round(angle_degrees,2))
-    write_to_device(motor, k, str(k)+'sj'+to8_format(angle_tohexa(angle_degrees)))
-    write_to_device(motor, k, str(k)+'fw')
-    read_pos(motor, k)
+def move_fw(bus, address, angle_degrees):
+    '''
+    Rotate in forward direction to a relative angle
 
-def move_bw(motor, k, angle_degrees):
-    '''moves backward'''
-    print('move '+str(k)+' bw: ', round(angle_degrees,2))
-    write_to_device(motor, k, str(k)+'sj'+to8_format(angle_tohexa(angle_degrees)))
-    write_to_device(motor, k, str(k)+'bw')
-    read_pos(motor, k)
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+    angle_degrees : Positive integer value for relative angle (fw)
+    '''
+    print('move '+str(address)+' fw: ', round(angle_degrees, 2))
+    command = str(address)+'sj'+to8_format(angle_tohexa(angle_degrees))
+    write_to_device(bus, address, command)
+    write_to_device(bus, address, str(address)+'fw')
+    read_pos(bus, address)
+
+def move_bw(bus, address, angle_degrees):
+    '''
+    Rotate in forward direction to a relative angle
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+    angle_degrees : Positive integer value for relative angle (bw)
+    '''
+    print('move '+str(address)+' bw: ', round(angle_degrees, 2))
+    command = str(address)+'sj'+to8_format(angle_tohexa(angle_degrees))
+    write_to_device(bus, address, command)
+    write_to_device(bus, address, str(address)+'bw')
+    read_pos(bus, address)
+
+# def move_rel(bus, address, angle_degrees):
+#     write_to_device(
+#         bus,
+#         address,
+#         str(address)+'mr'+to8_format(angle_tohexa(angle_degrees))
+#         )
