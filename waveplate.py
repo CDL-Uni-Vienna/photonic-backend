@@ -1,4 +1,4 @@
-from ControlThorlabsMotors import open_serial, move_topos
+from ControlThorlabsMotors import open_serial, move_abs
 import local_settings as settings
 
 
@@ -30,5 +30,5 @@ class Waveplate:
                 in absolute degrees
         '''
         bus = open_serial(settings.com)
-        move_topos(bus, self.address, angle + self.offset)
+        move_abs(bus, self.address, angle + self.offset)
         bus.close()
