@@ -4,8 +4,8 @@ import local_settings as settings
 
 class Waveplate:
     '''
-    Class of Rotation Mount with Waveplate which is connected via
-    bus and Thorlabs hardware module
+    Class for high level operations on the waveplate which is mounted in the
+    respective Thorlabs motor
     '''
     def __init__(self, address, offset):
         '''
