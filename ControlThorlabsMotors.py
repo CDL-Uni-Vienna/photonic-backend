@@ -62,7 +62,7 @@ def hexa_toangle(hexa_str):
     '''
     npulses_total = 143360 # equal to int('23000')
     angle_degree = int(hexa_str, 16)/npulses_total*360
-    angle_degree = round(angle_degree,3)
+    angle_degree = round(angle_degree, 3)
     return angle_degree
 
 def to8_format(in_str):
@@ -125,38 +125,10 @@ def get_position(bus, address):
     command = str(address) + 'gp'
     write_to_device(bus, address, command)
     line = bus.readline() # read and return one line from the stream
-    # e.g. b'0PO00008B7C\r\n', line terminator b'\n' is for binary files
-    hex = line[6:13] # hexa format, string type
+    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
+    hex = line[6:11] # hexa format, string type, e.g. b'08B7B'
     angle = hexa_toangle(hex)
     return angle
-
-def set_home(bus, address, angle_degrees):
-    '''
-    Set home angle for respective Thorlabs Motor connected to address on bus
-
-    Parameters
-    ----------
-    bus     : Serial port object which is returned from open_serial
-    address : Positive integer which specifies the bus address of the device
-    angle_degrees : Value for absolute positive angle
-    '''
-    print('set home offset ' + string(address))
-    command = str(address) + 'so' + to8_format(angle_tohexa(angle_degrees))
-    write_to_device(bus, address, command)
-
-def go_home(bus, address): # homes motor clockwise
-    '''
-    Moves respective Thorlabs Motor to home position
-
-    Parameters
-    ----------
-    bus     : Serial port object which is returned from open_serial
-    address : Positive integer which specifies the bus address of the device
-    angle_degrees : Value for absolute positive angle
-    '''
-    print('homing '+ str(address))
-    command = str(address) + 'ho1'
-    write_to_device(bus, address, command) # 'ho0' clockwise, 'ho1' counter
 
 def move_abs(bus, address, angle_degrees):
     '''
@@ -168,7 +140,7 @@ def move_abs(bus, address, angle_degrees):
     address : Positive integer which specifies the bus address of the device
     angle_degrees : Value for absolute positive angle
     '''
-    print('move ' + str(address) + ' to: ', round(angle_degrees, 2))
+    print('move ' + str(address) + ' to:', round(angle_degrees, 2))
     command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
 
@@ -201,6 +173,59 @@ def move_bw(bus, address, angle_degrees):
     command = str(address) + 'sj' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
     write_to_device(bus, address, str(address) + 'bw')
+
+def set_offset(bus, address, angle_degrees):
+    '''
+    Set home angle for respective Thorlabs Motor connected to address on bus
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+    angle_degrees : Value for absolute positive angle
+
+    Returns
+    -------
+    ???
+    '''
+    print('set home offset ' + str(address) + ' to ' + str(angle_degrees))
+    command = str(address) + 'so' + to8_format(angle_tohexa(angle_degrees))
+    write_to_device(bus, address, command)
+
+def get_offset(bus, address):
+    '''
+    Read the offset setting from the respective Thorlabs Rotation Motor
+    connected to address on bus
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+
+    Returns
+    -------
+    angle : Angle of position in degrees as calculated by hexa_toangle()
+    '''
+    command = str(address) + 'go'
+    write_to_device(bus, address, command)
+    line = bus.readline()
+    hex = line[6:11]
+    angle = hexa_toangle(hex)
+    return angle
+
+def goto_offset(bus, address): # homes motor clockwise
+    '''
+    Moves respective Thorlabs Motor to home position
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+    angle_degrees : Value for absolute positive angle
+    '''
+    print('homing '+ str(address))
+    command = str(address) + 'ho1'
+    write_to_device(bus, address, command) # 'ho0' clockwise, 'ho1' counter
 
 # def move_rel(bus, address, angle_degrees):
 #     write_to_device(
