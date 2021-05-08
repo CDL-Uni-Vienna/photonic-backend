@@ -60,9 +60,14 @@ def hexa_toangle(hexa_str):
     -------
     angle_degree : Number in deegrees as float type
     '''
-    npulses_total = 143360 # equal to int('23000')
-    angle_degree = int(hexa_str, 16)/npulses_total*360
-    angle_degree = round(angle_degree, 3)
+    print('---')
+    print(hexa_str)
+    if hexa_str != b'\n':
+        npulses_total = 143360 # equal to int('23000')
+        angle_degree = int(hexa_str, 16)/npulses_total*360
+        angle_degree = round(angle_degree, 3)
+    else:
+        angle_degree = 0.0
     return angle_degree
 
 def to8_format(in_str):
@@ -80,13 +85,7 @@ def to8_format(in_str):
     '''
     reduced_hex = in_str[2:len(in_str)] # cut first two digits
     if len(reduced_hex) < 7:
-        zeroes = '0'
-        while True:
-            zeroes += '0'
-            if len(zeroes)>(8-len(reduced_hex))-1:
-                break
-        format8 = zeroes + reduced_hex
-        return format8 # e.g. 000023C7
+        return reduced_hex.zfill(8)
     else:
         raise ValueError('to8_format Error: input too long')
         return '00000000'
@@ -104,7 +103,7 @@ def write_to_device(bus, address, command):
 
     Returns
     -------
-    ???
+    Number of bytes written.
     '''
     bus.write(command.encode()) # encode to default utf-8 encoding
 
@@ -126,7 +125,11 @@ def get_position(bus, address):
     write_to_device(bus, address, command)
     line = bus.readline() # read and return one line from the stream
     # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
-    hex = line[6:11] # hexa format, string type, e.g. b'08B7B'
+    print('---')
+    print(line)
+    hex = line[4:11] # hexa format, string type, e.g. b'08B7B'
+    print('---')
+    print(hex)
     angle = hexa_toangle(hex)
     return angle
 
@@ -208,8 +211,8 @@ def get_offset(bus, address):
     '''
     command = str(address) + 'go'
     write_to_device(bus, address, command)
-    line = bus.readline()
-    hex = line[6:11]
+    line = bus.readline() # e.g b'0HO00001755\r\n'
+    hex = line[4:11]
     angle = hexa_toangle(hex)
     return angle
 

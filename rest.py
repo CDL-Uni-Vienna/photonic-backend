@@ -7,9 +7,9 @@ import requests
 from time import sleep
 
 
-def get():
+def get(id):
     """Returns list of JSON strings with RequestData models from server/api/RequestData"""
-    request = requests.get("http://127.0.0.1:8000/api/RequestData", auth=("zilk.felix@gmail.com", "123"))
+    request = requests.get(f"http://127.0.0.1:8000/api/job/{id}/", headers={'Authorization': 'Token 48c7940a1db22ead454e25e9012f38b4cc6fea84'})
     return request.json()
 
 def put(request_data):
@@ -28,4 +28,4 @@ def put_result(request_data):
     request_data['result'] = "Retrieved and executed."
     requests.put(f"http://127.0.0.1:8000/api/RequestData/{id}/", auth=("zilk.felix@gmail.com", "123"), data=request_data)
 
-print(get())
+# print(get(6))
