@@ -1,5 +1,5 @@
-import ControlThorlabsMotors as ctrl
-import local_settings as settings
+import ThorLabsMotors.RotationMount as ctrl
+import Settings.com_settings as settings
 
 
 #print(ctrl.to8_format('0x343'))
@@ -18,7 +18,7 @@ bus = ctrl.open_serial(settings.com)
 # # bus.close()
 # ctrl.move_abs(bus, 0, 45)
 # print(ctrl.get_position(bus, 0))
-# # print(ctrl.get_position(bus, 0))
+print(ctrl.get_position(bus, 0))
 # # print(ctrl.get_position(bus, 1))
 # # print('----')
 # # print(ctrl.angle_tohexa(23))

@@ -1,5 +1,6 @@
-from ControlThorlabsMotors import open_serial, move_abs
-import local_settings as settings
+from ThorLabsMotors.RotationMount import open_serial, move_abs
+import Settings.offset_settings as offset_settings
+import Settings.com_settings as com_settings
 
 
 class Waveplate:
@@ -18,7 +19,7 @@ class Waveplate:
                     absolute degrees
         '''
         self.address = address
-        self.offset = settings.offset[address]
+        self.offset = offset_settings.offset[address]
 
     def rotate(self, angle):
         '''
@@ -29,6 +30,6 @@ class Waveplate:
         angle : Float value specifying the target position of the Rotation Mount
                 in absolute degrees
         '''
-        bus = open_serial(settings.com)
+        bus = open_serial(com_settings.com)
         move_abs(bus, self.address, angle + self.offset)
         bus.close()

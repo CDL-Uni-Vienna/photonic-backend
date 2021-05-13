@@ -1,4 +1,4 @@
-import functions_Powermeter as fpm
+import ControlPowermeter as fpm
 
 
 #print(pm.open_powermeter('1909736'))

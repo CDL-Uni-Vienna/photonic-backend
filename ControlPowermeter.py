@@ -1,5 +1,5 @@
 import ctypes
-from ThorLabs import TLPM as ThorLib
+from ThorLabsMotors import PowerMeter
 import pylab
 
 def open_powermeter(serialnumber):
@@ -19,11 +19,15 @@ def open_powermeter(serialnumber):
         Python object of the powermeter
 
     """
-    powermeter = ThorLib.TLPM()
+    powermeter = PowerMeter.TLPM()
     powermeter.findRsrc()
+    print('-----')
+    print(powermeter.findRsrc())
     i = 0
     while True:
         resourceName = powermeter.getRsrcName(i)[1]
+        print('-----')
+        print(resourceName)
         i += 1
         if bytes(serialnumber, "utf8") in ctypes.c_char_p(resourceName.raw).value:
             powermeter.open(resourceName)

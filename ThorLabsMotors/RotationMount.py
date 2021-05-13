@@ -1,3 +1,12 @@
+"""
+Control library for ThorLabs Rotation Mount with Resonant Piezoelectric Motors
+based on serial commands and the pySerial module
+
+This library is Copyright © 2020-2021, Juan C Loredo, Felix Zilk
+"""
+
+
+
 from pylab import floor
 import serial
 
@@ -229,10 +238,3 @@ def goto_offset(bus, address): # homes motor clockwise
     print('homing '+ str(address))
     command = str(address) + 'ho1'
     write_to_device(bus, address, command) # 'ho0' clockwise, 'ho1' counter
-
-# def move_rel(bus, address, angle_degrees):
-#     write_to_device(
-#         bus,
-#         address,
-#         str(address)+'mr'+to8_format(angle_tohexa(angle_degrees))
-#         )
