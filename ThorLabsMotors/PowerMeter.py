@@ -88,19 +88,19 @@ class TLPM:
         pInvokeResult = self.dll.TLPM_close(self.devSession)
         return pInvokeResult
 
-    def findRsrc(self, resourceCount = c_uint32()):
+    def findRsrc(self, resourceCount):
         """
-        This function finds all driver compatible devices attached to the PC and returns the number of found devices.
-        Note:
-        (1) The function additionally stores information like system name about the found resources internally. This information can be retrieved with further functions from the class, e.g. <Get Resource Description> and <Get Resource Information>.
-        Args:
-            resourceCount(c_int use with byref) : The number of connected devices that are supported by this driver.
-        Returns:
-            int: The return value, 0 is for success
-        """
-        pInvokeResult = self.dll.TLPM_findRsrc(self.devSession, byref(resourceCount))
+		This function finds all driver compatible devices attached to the PC and returns the number of found devices.
+		Note:
+		(1) The function additionally stores information like system name about the found resources internally. This information can be retrieved with further functions from the class, e.g. <Get Resource Description> and <Get Resource Information>.
+		Args:
+			resourceCount(c_uint32 use with byref) : The number of connected devices that are supported by this driver.
+		Returns:
+			int: The return value, 0 is for success
+		"""
+        pInvokeResult = self.dll.TLPM_findRsrc(self.devSession, resourceCount)
         self.__testForError(pInvokeResult)
-        return pInvokeResult, resourceCount.value
+        return pInvokeResult, resourceCount
 
     def getRsrcName(self, index, resourceName = create_string_buffer(1024)):
         """

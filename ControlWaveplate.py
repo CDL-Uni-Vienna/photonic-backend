@@ -8,6 +8,7 @@ class Waveplate:
     Class for high level operations on the waveplate which is mounted in the
     respective Thorlabs motor
     '''
+    
     def __init__(self, address):
         '''
         Initializes the motors

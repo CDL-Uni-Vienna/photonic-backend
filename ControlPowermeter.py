@@ -1,9 +1,11 @@
 import ctypes
 from ThorLabsMotors import PowerMeter
-import pylab
+import pylab, time
+
+
 
 def open_powermeter(serialnumber):
-    """
+    '''
     Description
     -----------
           Open the powermeter.
@@ -15,28 +17,39 @@ def open_powermeter(serialnumber):
 
     Returns
     -------
-    powermeter : class
-        Python object of the powermeter
-
-    """
+    powermeter : ThorLabsMotors.PowerMeter.TLPM object
+    '''
     powermeter = PowerMeter.TLPM()
-    powermeter.findRsrc()
+    deviceCount = ctypes.c_uint32()
+    powermeter.findRsrc(ctypes.byref(deviceCount))
+    # returns (0, <cparam 'P' (00000161BE6D5A88)>)
     print('-----')
-    print(powermeter.findRsrc())
-    i = 0
-    while True:
+    print(powermeter.findRsrc(ctypes.byref(deviceCount)))
+    print('-----')
+    print(deviceCount.value)
+    for i in range (0, deviceCount.value):
+        # deviceCount.value = no. of powermeters, is 1 if one powermeter is connected
         resourceName = powermeter.getRsrcName(i)[1]
+        # resourceName is e.g. <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>
         print('-----')
         print(resourceName)
-        i += 1
-        if bytes(serialnumber, "utf8") in ctypes.c_char_p(resourceName.raw).value:
+        print('-----')
+        print(powermeter.getRsrcName(i))
+        # getRsrcName for each instance returns tuple (0, <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>)
+        print('-----')
+        print(ctypes.c_char_p(resourceName.raw).value)
+        # prints b'USB0::0x1313::0x8072::1909736::INSTR'
+        if serialnumber in str(ctypes.c_char_p(resourceName.raw).value):
             powermeter.open(resourceName)
+            print('-----')
+            print(powermeter)
+            print('-----')
+            print('Powermeter: ' + str(powermeter) + ' opened')
+            # <ThorLabsMotors.PowerMeter.TLPM object at 0x0000027A391360A0>
             return powermeter
 
-
-
 def close_powermeter(powermeter):
-    """
+    '''
     Description
     -----------
           Close the powermeter.
@@ -45,13 +58,12 @@ def close_powermeter(powermeter):
     ----------
     powermeter : class
         Python object of the powermeter
-    """
+    '''
     powermeter.close()
+    print('Powermeter closed')
 
-
-
-def read_power(powermeter, unit = 0, wavelenght = 930):
-    """
+def measure_power(powermeter, unit, wavelength):
+    '''
     Read the power in a certain unit and in a definite wavelenght.
 
     Parameters
@@ -69,17 +81,32 @@ def read_power(powermeter, unit = 0, wavelenght = 930):
     power : float
         Power read from the powermeter in uW.
 
-    """
+    '''
     powermeter.setPowerUnit(unit)
-    powermeter.setWavelength(wavelenght)
-    power = powermeter.measPower()[1] * 1e6
+    powermeter.setWavelength(wavelength)
+    power = powermeter.measPower()[1]
+    return power
 
-    return round(power, 4)
-
-
+def measure_row(powermeter, unit, wavelength):
+    powermeter.setPowerUnit(unit)
+    powermeter.setWavelength(wavelength)
+    power_measurements = []
+    times = []
+    count = 0
+    while count < 5:
+        power = powermeter.measPower()[1]
+        # returned value is already c_double().value
+        power_measurements.append(power)
+        print('-----')
+        print(power)
+        print(count)
+        count+=1
+        time.sleep(0.5)
+    print('-----')
+    print(power_measurements)
 
 def makefigure_wpscan(positions, powers):
-    """
+    '''
     Plots the power vs. positions of the data acquired from the waveplate.
 
     Parameters
@@ -93,7 +120,7 @@ def makefigure_wpscan(positions, powers):
     -------
     None.
 
-    """
+    '''
     pylab.figure()
     pylab.plot(positions, powers, '.-', label='wp scan ')
     pylab.legend()
