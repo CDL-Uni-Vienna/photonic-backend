@@ -32,6 +32,7 @@ def open_powermeter(serialnumber):
         resourceName = powermeter.getRsrcName(i)[1]
         # resourceName is e.g. <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>
         print('-----')
+        print('resourceName:')
         print(resourceName)
         print('-----')
         print(powermeter.getRsrcName(i))
@@ -92,16 +93,14 @@ def measure_row(powermeter, unit, wavelength):
     powermeter.setWavelength(wavelength)
     power_measurements = []
     times = []
-    count = 0
-    while count < 5:
+    for count in range(0, 5):
         power = powermeter.measPower()[1]
         # returned value is already c_double().value
         power_measurements.append(power)
         print('-----')
         print(power)
         print(count)
-        count+=1
-        time.sleep(0.5)
+        time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
     print('-----')
     print(power_measurements)
 
