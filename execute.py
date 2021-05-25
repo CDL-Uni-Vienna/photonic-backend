@@ -1,16 +1,21 @@
-import json
-
 import rest
 import Settings.local_settings as settings
 
-wp_assignment = {
-    "Lamda2": 0,
-    "Lamda4": 1
-}
 
+def h_gate(qubit):
+    """
+
+    """
+    
 
 
 print("Request data in JSON:")
 data = rest.get(3)
-#data = json.loads(data)
+print(data)
+print("-----")
 print(data["experiment"][0])
+
+
+for shot in range(0, data["shots"]):
+    for command in data["experiment"]:
+        if command["name"] == "H":

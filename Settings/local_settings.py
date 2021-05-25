@@ -1,2 +1,4 @@
 from ControlWaveplate import Waveplate
-waveplates = [Waveplate(0),  Waveplate(1)] # define available waveplates
+# first QWP, then HWP
+# argument of Waveplate defines bus address
+waveplates = {"0/4": Waveplate(0), "0/2": Waveplate(1)}
