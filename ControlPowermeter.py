@@ -1,6 +1,6 @@
 import ctypes
 from ThorLabsMotors import PowerMeter
-import pylab, time
+import time
 
 
 
@@ -104,28 +104,28 @@ def measure_row(powermeter, unit, wavelength):
     print('-----')
     print(power_measurements)
 
-def makefigure_wpscan(positions, powers):
-    '''
-    Plots the power vs. positions of the data acquired from the waveplate.
+# def makefigure_wpscan(positions, powers):
+#     '''
+#     Plots the power vs. positions of the data acquired from the waveplate.
 
-    Parameters
-    ----------
-    positions : list
-        list of positions of the wave plate
-    powers : list
-        list of the corresponding powers
+#     Parameters
+#     ----------
+#     positions : list
+#         list of positions of the wave plate
+#     powers : list
+#         list of the corresponding powers
 
-    Returns
-    -------
-    None.
+#     Returns
+#     -------
+#     None.
 
-    '''
-    pylab.figure()
-    pylab.plot(positions, powers, '.-', label='wp scan ')
-    pylab.legend()
-    # title('Uses PM100USB')
-    pylab.xlabel('Angle (degrees)')
-    pylab.ylabel('Power (uW)')
-    pylab.tight_layout()
-    pylab.tight_layout()
-    pylab.show()
+#     '''
+#     pylab.figure()
+#     pylab.plot(positions, powers, '.-', label='wp scan ')
+#     pylab.legend()
+#     # title('Uses PM100USB')
+#     pylab.xlabel('Angle (degrees)')
+#     pylab.ylabel('Power (uW)')
+#     pylab.tight_layout()
+#     pylab.tight_layout()
+#     pylab.show()
