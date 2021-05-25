@@ -2,9 +2,9 @@
 # Edit at https://www.gitignore.io/?templates=python,vagrant
 
 # Photonic-Backend
-*offset_settings.py
-*com_settings.py
-*.dll
+# *offset_settings.py
+# *com_settings.py
+# *.dll
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
