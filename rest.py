@@ -14,7 +14,7 @@ def get(id):
     """
     request = requests.get(
         f"http://127.0.0.1:8000/api/job/{id}/",
-        headers={'Authorization': 'Token 48c7940a1db22ead454e25e9012f38b4cc6fea84'}
+        headers={'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
         )
     return request.json()
 
