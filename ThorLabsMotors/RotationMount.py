@@ -5,9 +5,7 @@ based on serial commands and the pySerial module
 This library is Copyright © 2020-2021, Juan C Loredo, Felix Zilk
 """
 
-
-
-from pylab import floor
+from math import floor
 import serial
 
 
