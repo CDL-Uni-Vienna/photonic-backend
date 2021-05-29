@@ -7,108 +7,75 @@ import Settings.measurement_settings as settings
 
 def open_powermeter(serialnumber):
     '''
-    Description
-    -----------
-          Open the powermeter.
+    Functionality: Open the powermeter (PM)
 
-    Parameters
-    ----------
-    serialnumber : str
-        Serial number of the powermeter
+    Parameters: serialnumber of the PM string type
 
-    Returns
-    -------
-    powermeter : ThorLabsMotors.PowerMeter.TLPM object
+    Returns: powermeter : ThorLabsMotors.PowerMeter.TLPM object
     '''
     powermeter = PowerMeter.TLPM()
     deviceCount = ctypes.c_uint32()
     powermeter.findRsrc(ctypes.byref(deviceCount))
     # returns (0, <cparam 'P' (00000161BE6D5A88)>)
-    print('-----')
-    print(powermeter.findRsrc(ctypes.byref(deviceCount)))
-    print('-----')
-    print(deviceCount.value)
     for i in range (0, deviceCount.value):
         # deviceCount.value = no. of powermeters, is 1 if one powermeter is connected
         resourceName = powermeter.getRsrcName(i)[1]
-        # resourceName is e.g. <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>
-        print('-----')
-        print('resourceName:')
-        print(resourceName)
-        print('-----')
-        print(powermeter.getRsrcName(i))
         # getRsrcName for each instance returns tuple (0, <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>)
-        print('-----')
-        print(ctypes.c_char_p(resourceName.raw).value)
-        # prints b'USB0::0x1313::0x8072::1909736::INSTR'
+        # resourceName is e.g. <ctypes.c_char_Array_1024 object at 0x00000161B8FAD8C0>
         if serialnumber in str(ctypes.c_char_p(resourceName.raw).value):
+            # ctypes.c_char_p(resourceName.raw).value is e.g. b'USB0::0x1313::0x8072::1909736::INSTR'
             powermeter.open(resourceName)
-            print('-----')
-            print(powermeter)
-            print('-----')
-            print('Powermeter: ' + str(powermeter) + ' opened')
-            # <ThorLabsMotors.PowerMeter.TLPM object at 0x0000027A391360A0>
+            # powermeter object <ThorLabsMotors.PowerMeter.TLPM object at 0x0000027A391360A0>
             return powermeter
 
 def close_powermeter(powermeter):
     '''
-    Description
-    -----------
-          Close the powermeter.
+    Description: Closes the powermeter.
 
-    Parameters
-    ----------
-    powermeter : class
-        Python object of the powermeter
+    Parameters: powermeter object
     '''
     powermeter.close()
     print('Powermeter closed')
 
-def measure_power(powermeter, unit, wavelength):
-    '''
-    Read the power in a certain unit and in a definite wavelenght.
-
-    Parameters
-    ----------
-    powermeter : class
-        Python object of the powermeter.
-    unit : int
-        0 - power measured in Watt
-        1 - power measured in dBm
-    wavelenght : float
-        Wavelenght to use to compute the power from the detected current in nm.
-
-    Returns
-    -------
-    power : float
-        Power read from the powermeter in uW.
-
-    '''
-    powermeter.setPowerUnit(unit)
-    powermeter.setWavelength(wavelength)
-    power = powermeter.measPower()[1]
-    return power
-
-def measure_row(seconds):
+def measure_row(powermeter, counts):
     powermeter.setPowerUnit(settings.powerUnit)
     powermeter.setWavelength(settings.wavelength)
     power_measurements = []
-    start_time = time.time()
-    while True:
-        current_time = time.time()
-        elapsed_time = current_time - start_time
+    for i in range(counts):
         power = powermeter.measPower()[1]
         # returned value is already c_double().value
         power_measurements.append(power)
-        print('-----')
-        print(power)
-        print(count)
+        # print('-----')
+        # print(power)
+        # print(i)
         time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
-        if elapsed_time > seconds:
-            print("finished iterating in " + str(int(elapsed_time)) + " seconds")
-            break
     print('-----')
     print(power_measurements)
+
+# def measure_power(powermeter, unit, wavelength):
+#     '''
+#     Read the power in a certain unit and in a definite wavelenght.
+
+#     Parameters
+#     ----------
+#     powermeter : class
+#         Python object of the powermeter.
+#     unit : int
+#         0 - power measured in Watt
+#         1 - power measured in dBm
+#     wavelenght : float
+#         Wavelenght to use to compute the power from the detected current in nm.
+
+#     Returns
+#     -------
+#     power : float
+#         Power read from the powermeter in uW.
+
+#     '''
+#     powermeter.setPowerUnit(unit)
+#     powermeter.setWavelength(wavelength)
+#     power = powermeter.measPower()[1]
+#     return power
 
 # def makefigure_wpscan(positions, powers):
 #     '''

@@ -9,9 +9,7 @@ from ThorLabsMotors.PowerMeter import TLPM
 # prints None
 
 pm = fpm.open_powermeter('1909736')
-fpm.measure_power(pm, 0, 930)
-print(fpm.measure_power(pm, 0, 930))
-fpm.measure_row(pm, 0, 930)
+fpm.measure_row(pm, 5)
 fpm.close_powermeter(pm)
 #prints nothing at call
 
