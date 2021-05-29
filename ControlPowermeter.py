@@ -1,7 +1,8 @@
 import ctypes
-from ThorLabsMotors import PowerMeter
 import time
 
+from ThorLabsMotors import PowerMeter
+import Settings.measurement_settings as settings
 
 
 def open_powermeter(serialnumber):
@@ -88,12 +89,14 @@ def measure_power(powermeter, unit, wavelength):
     power = powermeter.measPower()[1]
     return power
 
-def measure_row(powermeter, unit, wavelength):
-    powermeter.setPowerUnit(unit)
-    powermeter.setWavelength(wavelength)
+def measure_row(seconds):
+    powermeter.setPowerUnit(settings.powerUnit)
+    powermeter.setWavelength(settings.wavelength)
     power_measurements = []
-    times = []
-    for count in range(0, 5):
+    start_time = time.time()
+    while True:
+        current_time = time.time()
+        elapsed_time = current_time - start_time
         power = powermeter.measPower()[1]
         # returned value is already c_double().value
         power_measurements.append(power)
@@ -101,6 +104,9 @@ def measure_row(powermeter, unit, wavelength):
         print(power)
         print(count)
         time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
+        if elapsed_time > seconds:
+            print("finished iterating in " + str(int(elapsed_time)) + " seconds")
+            break
     print('-----')
     print(power_measurements)
 

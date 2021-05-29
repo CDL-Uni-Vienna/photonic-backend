@@ -4,7 +4,6 @@
 #returns the result
 
 import requests
-from time import sleep
 
 
 def get(id):

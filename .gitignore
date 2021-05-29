@@ -5,6 +5,10 @@
 # *offset_settings.py
 # *com_settings.py
 # *.dll
+# ThorLabsMotors
+# ThorLabsMotors/Bin
+# ThorLabsMotors/PowerMeter.py
+# ThorLabsMotors/RotationMount.py
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
