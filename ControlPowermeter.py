@@ -49,7 +49,6 @@ def measure_row(powermeter, counts):
         # print(power)
         # print(i)
         time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
-    print('-----')
     print(power_measurements)
 
 # def measure_power(powermeter, unit, wavelength):
