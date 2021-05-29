@@ -6,7 +6,6 @@ QWP = Waveplate(0)
 HWP = Waveplate(1)
 pm = open_powermeter(settings.serialnumber)
 
-
 # measure in H
 QWP.rotate(0)
 HWP.rotate(0)
