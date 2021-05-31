@@ -1,5 +1,4 @@
 import ControlPowermeter as fpm
-from ThorLabsMotors.PowerMeter import TLPM
 
 #print(pm.open_powermeter('1909736'))
 # prints <ThorLabs.TLPM.TLPM object at 0x000001EDACF060A0>
