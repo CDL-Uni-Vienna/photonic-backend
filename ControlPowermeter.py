@@ -49,55 +49,6 @@ def measure_row(powermeter, counts):
         # print(power)
         # print(i)
         time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
+    print("Measurement series:")
     print(power_measurements)
-
-# def measure_power(powermeter, unit, wavelength):
-#     '''
-#     Read the power in a certain unit and in a definite wavelenght.
-
-#     Parameters
-#     ----------
-#     powermeter : class
-#         Python object of the powermeter.
-#     unit : int
-#         0 - power measured in Watt
-#         1 - power measured in dBm
-#     wavelenght : float
-#         Wavelenght to use to compute the power from the detected current in nm.
-
-#     Returns
-#     -------
-#     power : float
-#         Power read from the powermeter in uW.
-
-#     '''
-#     powermeter.setPowerUnit(unit)
-#     powermeter.setWavelength(wavelength)
-#     power = powermeter.measPower()[1]
-#     return power
-
-# def makefigure_wpscan(positions, powers):
-#     '''
-#     Plots the power vs. positions of the data acquired from the waveplate.
-
-#     Parameters
-#     ----------
-#     positions : list
-#         list of positions of the wave plate
-#     powers : list
-#         list of the corresponding powers
-
-#     Returns
-#     -------
-#     None.
-
-#     '''
-#     pylab.figure()
-#     pylab.plot(positions, powers, '.-', label='wp scan ')
-#     pylab.legend()
-#     # title('Uses PM100USB')
-#     pylab.xlabel('Angle (degrees)')
-#     pylab.ylabel('Power (uW)')
-#     pylab.tight_layout()
-#     pylab.tight_layout()
-#     pylab.show()
+    return power_measurements

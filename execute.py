@@ -4,7 +4,7 @@ from ControlWaveplate import Waveplate
 from ControlPowermeter import open_powermeter, close_powermeter, measure_row
 
 
-data = rest.get(7)
+data = rest.get(8)
 print("-----")
 print("Request data in JSON:")
 print(data)
@@ -21,14 +21,18 @@ pm = open_powermeter(settings.serialnumber)
 print("shots:")
 print(data["shots"])
 
-for run in range(0, data["shots"]):
+for run in range(1): #range(0, data["shots"]+1):
     for command in data["experiment"]:
-        print(type(command["params"]))
         if command["name"] == "QWP":
+            # command["params"] is string type
             qwp.rotate(float(command["params"]))
         elif command["name"] == "HWP":
             hwp.rotate(float(command["params"]))
         elif command["name"] == "measure":
-            measure_row(pm, int(float(command["params"])))
+            m = measure_row(pm, int(float(command["params"])))
+            print("measure row:")
+            print(m)
+
+
 
 close_powermeter(pm)

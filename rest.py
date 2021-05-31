@@ -18,10 +18,11 @@ def get(id):
     return request.json()
 
 def put(request_data):
-    """Updates RequestData model with request_data of corresponding id"""
+    """Updates Result
+     model with request_data of corresponding id"""
     id = request_data['id']
     requests.put(
-        f"http://127.0.0.1:8000/api/RequestData/{id}/",
+        f"http://127.0.0.1:8000/api/result/{id}/",
         auth=("zilk.felix@gmail.com", "123"), data=request_data)
 
 def is_fetched(request_data):
@@ -29,10 +30,12 @@ def is_fetched(request_data):
     request_data['is_fetched'] = True
     put(request_data)
 
-def put_result(request_data):
-    """Sends back the result string"""
-    id = request_data['id']
-    request_data['result'] = "Retrieved and executed."
-    requests.put(f"http://127.0.0.1:8000/api/RequestData/{id}/", auth=("zilk.felix@gmail.com", "123"), data=request_data)
-
-# print(get(6))
+# def post_result(raw_result):
+#     """Sends back the result string"""
+#     payload = {}
+#     # request_data['result'] = "Retrieved and executed."
+#     requests.post(
+#         f"http://127.0.0.1:8000/api/result/", 
+#         data = payload, 
+#         auth=("zilk.felix@gmail.com", "123")
+#     )
