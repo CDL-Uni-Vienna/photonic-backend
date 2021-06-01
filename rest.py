@@ -4,16 +4,18 @@
 #returns the result
 
 import requests
-
+# All header values must be a string, bytestring, or unicode
 
 def get(id):
     """
     Returns list of JSON strings with RequestData models
     from server/api/job
     """
+    url = f"http://127.0.0.1:8000/api/job/{id}/"
+    token = {'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
     request = requests.get(
-        f"http://127.0.0.1:8000/api/job/{id}/",
-        headers={'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
+        url,
+        headers=token
         )
     return request.json()
 
@@ -30,12 +32,13 @@ def is_fetched(request_data):
     request_data['is_fetched'] = True
     put(request_data)
 
-# def post_result(raw_result):
-#     """Sends back the result string"""
-#     payload = {}
-#     # request_data['result'] = "Retrieved and executed."
-#     requests.post(
-#         f"http://127.0.0.1:8000/api/result/", 
-#         data = payload, 
-#         auth=("zilk.felix@gmail.com", "123")
-#     )
+def post_result(raw_result):
+    """Sends back the result string"""
+    payload = {'results': raw_result}
+    token = {'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
+    # request_data['result'] = "Retrieved and executed."
+    requests.post(
+        f"http://127.0.0.1:8000/api/result/", 
+        data = payload, 
+        headers=token
+    )
