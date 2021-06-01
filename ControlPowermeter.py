@@ -49,6 +49,4 @@ def measure_row(powermeter, counts):
         # print(power)
         # print(i)
         time.sleep(0.5) # do I need this? for 600 values this takes 300 secs
-    print("Measurement series:")
-    print(power_measurements)
     return power_measurements

@@ -32,9 +32,9 @@ def is_fetched(request_data):
     request_data['is_fetched'] = True
     put(request_data)
 
-def post_result(raw_result):
+def post_result(raw_result, job_id):
     """Sends back the result string"""
-    payload = {'results': raw_result}
+    payload = {'results': raw_result, 'job': job_id}
     token = {'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
     # request_data['result'] = "Retrieved and executed."
     requests.post(
