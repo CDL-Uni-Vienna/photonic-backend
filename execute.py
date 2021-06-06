@@ -3,7 +3,7 @@ import Settings.local_settings as settings
 from ControlWaveplate import Waveplate
 from ControlPowermeter import open_powermeter, close_powermeter, measure_row
 
-id = 8
+id = 10
 data = rest.get(id)
 # print("-----")
 # print("Request data in JSON:")
