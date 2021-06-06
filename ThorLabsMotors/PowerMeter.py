@@ -6,8 +6,7 @@ THORLABS PM100x/PM200 Series Optical Power Meter instruments.
 
 LICENSE:
 
-This software is Copyright © 2008-2014, Thorlabs,
-modified 2021 by Felix Zilk, Francesco Giorgino.
+This software is Copyright © 2008-2014, Thorlabs.
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
@@ -23,6 +22,8 @@ See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this library; if not, write to the Free Software Foundation,
 Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+Modified 2021 by Felix Zilk.
 """
 
 
