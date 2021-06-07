@@ -1,10 +1,10 @@
 import rest
 import Settings.local_settings as settings
-from ControlWaveplate import Waveplate
+# from ControlWaveplate import Waveplate
 from ControlPowermeter import open_powermeter, close_powermeter, measure_row
 
-id = 10
-data = rest.get(id)
+id = 2
+data = rest.get_job_snek(id)
 # print("-----")
 # print("Request data in JSON:")
 # print(data)
@@ -45,6 +45,6 @@ zip_iterator = zip(measurement_no, raw_data)
 dictionary = dict(zip_iterator)
 print(dictionary)
 
-rest.post_result(str(dictionary), id)
+rest.post_result_snek(str(dictionary), id)
 
 close_powermeter(pm)

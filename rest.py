@@ -5,6 +5,7 @@
 
 import requests
 # All header values must be a string, bytestring, or unicode
+snek_token = 'Token c40cea7d9e22e61b61d2d15bed328500d6d9e2c5'
 
 def get(id):
     """
@@ -12,7 +13,33 @@ def get(id):
     from server/api/job
     """
     url = f"http://127.0.0.1:8000/api/job/{id}/"
-    token = {'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
+    token = {'Authorization': 'Token 19edc712112f74fb418960229282e1344f9cb5d2'}
+    request = requests.get(
+        url,
+        headers=token
+        )
+    return request.json()
+
+def get_job_aws(id):
+    """
+    Returns list of JSON strings with RequestData models
+    from server/api/job
+    """
+    url = f"http://ec2-3-21-129-172.us-east-2.compute.amazonaws.com/api/job/{id}/"
+    token = {'Authorization': 'Token 7a2d8a382030b5a52cbdadfe3944bfbc3aee88ef'}
+    request = requests.get(
+        url,
+        headers=token
+        )
+    return request.json()
+
+def get_job_snek(id):
+    """
+    Returns list of JSON strings with RequestData models
+    from server/api/job
+    """
+    url = f"https://cdl.snek.at/api/job/{id}/"
+    token = {'Authorization': snek_token}
     request = requests.get(
         url,
         headers=token
@@ -35,10 +62,21 @@ def is_fetched(request_data):
 def post_result(raw_result, job_id):
     """Sends back the result string"""
     payload = {'results': raw_result, 'job': job_id}
-    token = {'Authorization': 'Token 4d09489efd910cccae619b8381add8e2ecbfbd71'}
+    token = {'Authorization': 'Token 19edc712112f74fb418960229282e1344f9cb5d2'}
     # request_data['result'] = "Retrieved and executed."
     requests.post(
         f"http://127.0.0.1:8000/api/result/", 
+        data = payload, 
+        headers=token
+    )
+
+def post_result_snek(raw_result, job_id):
+    """Sends back the result string"""
+    payload = {'results': raw_result, 'job': job_id}
+    token = {'Authorization': snek_token}
+    # request_data['result'] = "Retrieved and executed."
+    requests.post(
+        f"https://cdl.snek.at/api/result/", 
         data = payload, 
         headers=token
     )
