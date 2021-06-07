@@ -150,7 +150,7 @@ def move_abs(bus, address, angle_degrees):
     address : Positive integer which specifies the bus address of the device
     angle_degrees : Value for absolute positive angle
     '''
-    print('move ' + str(address) + ' to:', round(angle_degrees, 2))
+    # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
     command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
 

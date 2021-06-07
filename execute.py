@@ -28,12 +28,14 @@ i = 0
 for command in data["experiment"]:
     if command["name"] == "QWP":
         # command["params"] is string type
+        print('Move QWP to ' + str(command["params"]))
         qwp.rotate(float(command["params"]))
     elif command["name"] == "HWP":
         hwp.rotate(float(command["params"]))
+        print('Move HWP to ' + str(command["params"]))
     elif command["name"] == "measure":
         m = measure_row(pm, int(float(command["params"])))
-        print('measurement ' + str(i), m)
+        print('Measurement ' + str(i), m)
         measurement_no.append('measurement ' + str(i))
         raw_data.append(m)
         i = i + 1
