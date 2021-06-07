@@ -5,7 +5,7 @@
 
 import requests
 # All header values must be a string, bytestring, or unicode
-snek_token = 'Token c40cea7d9e22e61b61d2d15bed328500d6d9e2c5'
+snek_token = 'Token 59f6d91e7cd9a14898fe2c0b4b04f7fafbae9692'
 
 def get(id):
     """
