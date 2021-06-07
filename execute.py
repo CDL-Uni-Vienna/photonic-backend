@@ -3,7 +3,7 @@ import Settings.local_settings as settings
 # from ControlWaveplate import Waveplate
 from ControlPowermeter import open_powermeter, close_powermeter, measure_row
 
-id = 2
+id = 1
 data = rest.get_job_snek(id)
 # print("-----")
 # print("Request data in JSON:")
