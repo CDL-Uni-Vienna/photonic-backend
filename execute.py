@@ -3,8 +3,11 @@ import Settings.local_settings as settings
 # from ControlWaveplate import Waveplate
 from ControlPowermeter import open_powermeter, close_powermeter, measure_row
 
-id = 1
+id = 3
 data = rest.get_job_snek(id)
+print('--------------------')
+print('Fetched:')
+print(data)
 # print("-----")
 # print("Request data in JSON:")
 # print(data)
@@ -25,6 +28,8 @@ measurement_no = []
 raw_data = []
 i = 0
 #for run in range(1): #range(0, data["shots"]+1):
+print('--------------------')
+print('Start parsing...')
 for command in data["experiment"]:
     if command["name"] == "QWP":
         # command["params"] is string type
@@ -45,8 +50,12 @@ for command in data["experiment"]:
 
 zip_iterator = zip(measurement_no, raw_data)
 dictionary = dict(zip_iterator)
+
+print('--------------------')
+print('Results JSON:')
 print(dictionary)
 
 rest.post_result_snek(str(dictionary), id)
-
+print('--------------------')
+print('Results returned to API')
 close_powermeter(pm)
