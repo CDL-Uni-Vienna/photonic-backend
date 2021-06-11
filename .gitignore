@@ -17,6 +17,7 @@ Settings/com_settings.py
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode
 
 # C extensions
 *.so
