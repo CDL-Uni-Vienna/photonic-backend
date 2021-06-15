@@ -140,6 +140,31 @@ def get_position(bus, address):
     angle = hexa_toangle(hex)
     return angle
 
+def get_info(bus, address):
+    '''
+    Read the information from the respective Thorlabs Rotation Motor
+    connected to address on bus
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+
+    Returns
+    -------
+    serial : Serial number of the device
+    '''
+    command = str(address) + 'in'
+    write_to_device(bus, address, command)
+    line = bus.readline() # read and return one line from the stream
+    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
+    print('---')
+    print(line)
+    serialdev = line[5:12] # hexa format, string type, e.g. b'08B7B'
+    print('---')
+    print(serialdev)
+    return serialdev
+
 def move_abs(bus, address, angle_degrees):
     '''
     Move to an absolute positive angle
