@@ -5,5 +5,5 @@ waveplates = {"mode0/quarter": Waveplate(0), "mode0/half": Waveplate(1)}
 
 
 # Serialnumber of Powermeter
-# serialnumber = '1909736'
-serialnumber = '1907988'
+serialnumber = '1909736'
+# serialnumber = '1907988'

@@ -9,7 +9,7 @@ from math import floor
 import serial
 
 
-def open_serial(com_port):
+def open_serial(com_port, timeout = None):
     '''
     Opens serial port
 
@@ -27,7 +27,7 @@ def open_serial(com_port):
             bytesize = serial.EIGHTBITS,
             parity = serial.PARITY_NONE,
             stopbits = serial.STOPBITS_ONE,
-            timeout = None,
+            timeout = timeout,
             xonxoff = False,
             rtscts = False,
             dsrdtr = False,
@@ -160,7 +160,7 @@ def get_info(bus, address):
     # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
     print('---')
     print(line)
-    serialdev = line[5:12] # hexa format, string type, e.g. b'08B7B'
+    serialdev = line[5:13] # hexa format, string type, e.g. b'08B7B'
     print('---')
     print(serialdev)
     return serialdev
