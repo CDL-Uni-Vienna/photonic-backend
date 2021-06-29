@@ -8,36 +8,29 @@ devices_unkno = []
 
 for comPort in com_settings.com_list:
 
-    bus = open_serial(comPort,  timeout=0.3)
+    bus = open_serial(comPort,  timeout=0.1)
 
     for motorAddress in com_settings.address_list:
 
         device_sn = get_info(bus, motorAddress)
 
-        element = setupDic.get[device_sn]
+        element = setupDic.get(device_sn)
+        
         if element is None:
-            devices_unkno.append(element)
-            print(''.join(['Warning :: Element ', element, ' is not present in the setup dictionary (setupDic)' ]))
+            devices_unkno.append(device_sn)
         else:
-            devices_known.append(element)
+            devices_known.append(device_sn)
 
     bus.close()
 
+try:
+    while True:
+        devices_unkno.remove(b'')
+except ValueError:
+    pass
+
+print(devices_unkno)
 print(devices_known)
 
 devices_known
 
-
-
-
-
-
-
-# move_abs(bus, 0, 45)
-
-
-
-'''
-b'0IN0E1140050920201501016800023000\r\n'
-b'1IN0E1140050820201501016800023000\r\n'
-'''
