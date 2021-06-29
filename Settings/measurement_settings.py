@@ -13,8 +13,8 @@ wavelength = 930
 #   Type: HalfWaveplate, QuarterWaveplate, etc.(?) #
 #   ParametersDic: Dictionary containing parameter assoiated to each type of device e.g. offset #
 setupDic = {
-  '11400508': {'Path': 1, 'Order': 1.0, 'Type': 'QuarterWaveplate', 'ParametersDic': {'offset': 0.0} },
-  '11400509': {'Path': 1, 'Order': 2.0, 'Type': 'HalfWaveplate', 'ParametersDic': {'offset': 0.0} }
+  b'11400508': {'Path': 1, 'Order': 1.0, 'Type': 'QuarterWaveplate', 'ParametersDic': {'offset': 0.0} },
+  b'11400509': {'Path': 1, 'Order': 2.0, 'Type': 'HalfWaveplate', 'ParametersDic': {'offset': 0.0} }
 }
 
 # print(setupDic['11400508']['ParametersDic']['offset']) #
