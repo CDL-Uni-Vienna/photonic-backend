@@ -158,11 +158,11 @@ def get_info(bus, address):
     write_to_device(bus, address, command)
     line = bus.readline() # read and return one line from the stream
     # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
-    print('---')
-    print(line)
+    # print('---') #
+    # print(line) #
     serialdev = line[5:13] # hexa format, string type, e.g. b'08B7B'
-    print('---')
-    print(serialdev)
+    # print('---') #
+    # print(serialdev) #
     return serialdev
 
 def move_abs(bus, address, angle_degrees):
