@@ -6,3 +6,6 @@ com_list = ['COM4', 'COM5']
 # in Windows: Find COM port in device manager
 
 #pm = open_powermeter(sn,2)# 1: usb pm, other number, non-usb powermeter
+
+# All possible addresses for motos to communicate #
+address_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
