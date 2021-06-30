@@ -18,9 +18,14 @@ class PlatesArray:
         devices_unkno:      List of unknown devices i.e. those present in the setup dictionary (setupDic)
         '''
         self.pathID = pathID
+
         self.devices_known = []
+        self.devices_known_ports = []
+        self.devices_known_address = []
+        self.devices_known_bus = []
+
         self.devices_unkno = []
-        self.census
+        self.census()
 
     def census(self):
         '''
@@ -39,7 +44,9 @@ class PlatesArray:
                 if element is None:
                     self.devices_unkno.append(device_sn)
                 else:
-                    self.devices_known.append(device_sn)         
+                    self.devices_known.append(device_sn)
+                    self.devices_known_ports.append(comPort)
+                    self.devices_known_address.append(motorAddress)
 
         bus.close()
 
@@ -49,7 +56,26 @@ class PlatesArray:
         except ValueError:
             pass
 
-        print(self.devices_unkno)
-        print(self.devices_known)
-
         return [self.devices_known, self.devices_known]
+
+    def init(self):
+        '''
+        Initialize serial ports
+        '''
+        for device_port in self.devices_known_ports:
+            bus = open_serial(device_port)
+            self.devices_known_bus.append(bus)
+
+    def fina(self):
+        '''
+        Close serial ports
+        '''
+        for device_port in self.devices_known_bus:
+            device_port.close()
+
+    def setAngles(self, angles_list):
+        '''
+        Set plates in a particular set of angles specified by angles_list (ordered)
+        '''
+        for num, angle in enumerate(angles_list):
+            move_abs(self.devices_known_bus[num], self.devices_known_bus[num], angle ) # TODO: add offset from setupDic #
