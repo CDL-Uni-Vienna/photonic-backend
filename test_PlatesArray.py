@@ -5,9 +5,15 @@ blueprint_example = ['h(qreg_q[0])', 'rz(pi, qreg_q[0])']
 
 p_array1 = PlatesArray(1)
 
-aaa = p_array1.census
+p_array1.init()
 
-print(aaa)
+print('av')
+p_array1.setAngles([22.5, 0.0])
+print('ap')
+
+p_array1.fina()
+
+
 '''
 # Open serial ports #
 p_array1.init
