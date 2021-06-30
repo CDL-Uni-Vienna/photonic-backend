@@ -22,7 +22,10 @@ class PlatesArray:
         self.devices_known = []
         self.devices_known_ports = []
         self.devices_known_address = []
-        self.devices_known_bus = []
+
+        self.ports_nonDup = []
+
+        self.portsToBusDic = {}
 
         self.devices_unkno = []
         self.census()
@@ -56,26 +59,29 @@ class PlatesArray:
         except ValueError:
             pass
 
+        self.ports_nonDup = list(dict.fromkeys(self.devices_known_ports))
+
         return [self.devices_known, self.devices_known]
 
     def init(self):
         '''
         Initialize serial ports
         '''
-        for device_port in self.devices_known_ports:
+        for device_port in self.ports_nonDup:
             bus = open_serial(device_port)
-            self.devices_known_bus.append(bus)
+            self.portsToBusDic[device_port] = bus
 
     def fina(self):
         '''
         Close serial ports
         '''
-        for device_port in self.devices_known_bus:
-            device_port.close()
+        for device_port in self.ports_nonDup:
+            bus = self.portsToBusDic[device_port]
+            bus.close()
 
     def setAngles(self, angles_list):
         '''
         Set plates in a particular set of angles specified by angles_list (ordered)
         '''
         for num, angle in enumerate(angles_list):
-            move_abs(self.devices_known_bus[num], self.devices_known_bus[num], angle ) # TODO: add offset from setupDic #
+            move_abs(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle ) # TODO: add offset from setupDic #
