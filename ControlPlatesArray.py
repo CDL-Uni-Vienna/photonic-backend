@@ -1,6 +1,6 @@
 from ThorLabsMotors.RotationMount import move_abs, open_serial, get_info
 from Settings.measurement_settings import setupDic
-from interpretGate import interpretGate
+from interpretGate import interpretGateReq
 import Settings.com_settings as com_settings
 
 def flatten(t):
@@ -99,7 +99,7 @@ class PlatesArray:
         self.blueprint_requirements = []
 
         for gate in blueprint:
-            gate_requirements = interpretGate(gate)
+            gate_requirements = interpretGateReq(gate)
             self.blueprint_requirements.append(gate_requirements)
 
         self.blueprint_requirements = flatten(self.blueprint_requirements)
