@@ -1,7 +1,7 @@
-interpretGateDic = {
-  "h(qreg_q[0])": ["HalfWaveplate"],
-  "rz(pi/2, qreg_q[0])": ["HalfWaveplate"]
+interpretGateReqDic = {
+  'h(qreg_q[0])': ["HalfWaveplate"],
+  'rz(pi/2, qreg_q[0])': ["QuarterWaveplate"]
 }
 
-def interpretGate(str):
-    return interpretGateDic[str]
+def interpretGateReq(str):
+    return interpretGateReqDic[str]
