@@ -1,10 +1,11 @@
 from ControlPlatesArray import PlatesArray
 
 # from quiskit syntaxis we need to extract the gates applied #
-blueprint_example = ['h(qreg_q[0])', 'rz(pi, qreg_q[0])']
+blueprint_example = ['h(qreg_q[0])', 'rz(pi/2, qreg_q[0])']
 
 p_array1 = PlatesArray(1)
 
+'''
 p_array1.init()
 
 print('av')
@@ -12,6 +13,18 @@ p_array1.setAngles([22.5, 0.0])
 print('ap')
 
 p_array1.fina()
+
+print(p_array1.feasibleQ(blueprint_example))
+
+'''
+p_array1.init()
+
+if p_array1.feasibleQ(blueprint_example):
+    p_array1.setAngles([172.5, 150.0])
+else:
+    print('Error :: blueprints for plates array not feasible to implement')
+
+
 
 
 '''
