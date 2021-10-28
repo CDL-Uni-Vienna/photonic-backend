@@ -1,10 +1,7 @@
 from ThorLabsMotors.RotationMount import move_abs, open_serial, get_info
 from Settings.measurement_settings import setupDic
-from interpretGate import interpretGateReq
+from utilFunc import flatten
 import Settings.com_settings as com_settings
-
-def flatten(t):
-    return [item for sublist in t for item in sublist]
 
 class PlatesArray:
     '''
@@ -67,7 +64,7 @@ class PlatesArray:
 
         self.ports_nonDup = list(dict.fromkeys(self.devices_known_ports))
 
-        return [self.devices_known, self.devices_known]
+        return [self.devices_known, self.devices_unkno]
 
     def init(self):
         '''
@@ -90,19 +87,6 @@ class PlatesArray:
         Set plates in a particular set of angles specified by angles_list (ordered)
         '''
         for num, angle in enumerate(angles_list):
-            move_abs(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle ) # TODO: add offset from setupDic #
-    
-    def feasibleQ(self, blueprint):
-        '''
-        Test the feasiblity to implement the blueprint at 
-        '''
-        self.blueprint_requirements = []
-
-        for gate in blueprint:
-            gate_requirements = interpretGateReq(gate)
-            self.blueprint_requirements.append(gate_requirements)
-
-        self.blueprint_requirements = flatten(self.blueprint_requirements)
-
-        return self.devices_known_type == self.blueprint_requirements
+            move_abs(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle ) 
+            # TODO: add offset from setupDic #
 

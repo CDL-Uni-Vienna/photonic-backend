@@ -1,0 +1,24 @@
+{
+    "circuitId": 11,
+    "circuitAngles": [
+        {
+            "circuitAngleName": "alpha",
+            "circuitAngleValue": 45
+        },
+        {
+            "circuitAngleName": "beta",
+            "circuitAngleValue": 30
+        },
+        {
+            "circuitAngleName": "omega",
+            "circuitAngleValue": 12.5
+        }
+    ],
+    "encodedQubitMeasurements": [
+        {
+            "encodedQubitIndex": 1,
+            "theta": 45,
+            "phi": 22.5
+        }
+    ]
+}
