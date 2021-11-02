@@ -20,11 +20,12 @@ class Experiment:
         print('Initializing experiment...\n\tcircuitId: ' + str(self.circuitId) )
 
         d = os.getcwd()
-        d = os.path.join(d, 'photonic-backend', 'CircuitLib','circuits4Dv004.json')
+        #d = os.path.join(d, 'photonic-backend', 'CircuitLib','circuits4Dv004.json')
+        d = os.path.join(d, 'CircuitLib','circuits4Dv004.json')
 
         with open(d, "r") as read_file:
             self.circuitLib = json.load(read_file)
-            self.circuitLib = self.circuitLib[self.circuitId] #Load the lib
+            self.circuitLib = self.circuitLib[self.circuitId-1] #Load the lib
 
     def getPlatesAngles(self):
         '''
@@ -39,13 +40,13 @@ class Experiment:
  
         #Qubit computing angles
         if len(self.circuitAngles)>0:
-            self.circuitAnglesPaths = [*map( lambda d: self.circuitLib[d["circuitAngleName"]], self.circuitAngles)]
+            #self.circuitAnglesPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)]
             self.circuitAngles = [*map( lambda d: [45 , (180-2*d["circuitAngleValue"])/8], self.circuitAngles)]
         else:
             self.circuitAngles = []
 
         #Qubit measurements
-        self.encodedQubitMeasurementsPaths = [*map( lambda d: self.circuitLib[d["encodedQubitIndex"]], self.encodedQubitMeasurements)]
+        #self.encodedQubitMeasurementsPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["encodedQubitIndex"]], self.encodedQubitMeasurements)]
         self.encodedQubitMeasurements = [*map( lambda d: [ 
             d["theta"],d["phi"]
             ], self.encodedQubitMeasurements)]
