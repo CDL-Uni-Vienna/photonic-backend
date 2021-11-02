@@ -12,4 +12,4 @@ exp11 = Experiment(exp11_json)
 
 exp11.getPlatesAngles()
 
-exp11.load()
+exp11.rawExecute()

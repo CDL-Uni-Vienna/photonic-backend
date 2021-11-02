@@ -20,7 +20,7 @@ class Experiment:
         print('Initializing experiment...\n\tcircuitId: ' + str(self.circuitId) )
 
         d = os.getcwd()
-        d = os.path.join(d, 'photonic-backend', 'CircuitLib','circuits4Dv003.json')
+        d = os.path.join(d, 'photonic-backend', 'CircuitLib','circuits4Dv004.json')
 
         with open(d, "r") as read_file:
             self.circuitLib = json.load(read_file)
@@ -39,15 +39,16 @@ class Experiment:
  
         #Qubit computing angles
         if len(self.circuitAngles)>0:
+            self.circuitAnglesPaths = [*map( lambda d: self.circuitLib[d["circuitAngleName"]], self.circuitAngles)]
             self.circuitAngles = [*map( lambda d: [45 , (180-2*d["circuitAngleValue"])/8], self.circuitAngles)]
         else:
             self.circuitAngles = []
 
         #Qubit measurements
+        self.encodedQubitMeasurementsPaths = [*map( lambda d: self.circuitLib[d["encodedQubitIndex"]], self.encodedQubitMeasurements)]
         self.encodedQubitMeasurements = [*map( lambda d: [ 
             d["theta"],d["phi"]
             ], self.encodedQubitMeasurements)]
-
         self.encodedQubitMeasurements = [*map( thphToPlatesAngles, self.encodedQubitMeasurements)]
 
         #Merging all angles
@@ -59,11 +60,10 @@ class Experiment:
 
         print(self.platesAngles)
 
-    def load(self):
+    def rawExecute(self):
         '''
-        load the experiment configuration (i.e. setting waveplates)
+        Execute the experiment aligning the plates in the raw order the experiment dictates
         '''
-        print('Rotating plates...')
         p_array1 = PlatesArray(1)
 
         p_array1.init()
@@ -72,8 +72,3 @@ class Experiment:
         p_array1.setAngles(self.platesAngles)
 
         p_array1.fina()
-
-    def execute(self):
-        '''
-        Execute the experiment
-        '''
