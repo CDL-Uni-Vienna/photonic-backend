@@ -40,13 +40,14 @@ class Experiment:
  
         #Qubit computing angles
         if len(self.circuitAngles)>0:
-            #self.circuitAnglesPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)]
+            #print( [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)])
+            self.circuitAnglesPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)]
             self.circuitAngles = [*map( lambda d: [45 , (180-2*d["circuitAngleValue"])/8], self.circuitAngles)]
         else:
             self.circuitAngles = []
 
         #Qubit measurements
-        #self.encodedQubitMeasurementsPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["encodedQubitIndex"]], self.encodedQubitMeasurements)]
+        self.encodedQubitMeasurementsPaths = [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][str(d["encodedQubitIndex"])], self.encodedQubitMeasurements)]
         self.encodedQubitMeasurements = [*map( lambda d: [ 
             d["theta"],d["phi"]
             ], self.encodedQubitMeasurements)]

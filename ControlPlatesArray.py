@@ -2,6 +2,7 @@ from ThorLabsMotors.RotationMount import move_abs, open_serial, get_info
 from Settings.measurement_settings import setupDic
 from utilFunc import flatten
 import Settings.com_settings as com_settings
+import time
 
 class PlatesArray:
     '''
@@ -80,7 +81,7 @@ class PlatesArray:
         '''
         print('PlatesArray.load :: Loading known devices' )
 
-        
+
 
     def init(self):
         '''
@@ -104,5 +105,6 @@ class PlatesArray:
         '''
         for num, angle in enumerate(angles_list):
             move_abs(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle ) 
+            time.sleep(5)
             # TODO: add offset from setupDic #
 
