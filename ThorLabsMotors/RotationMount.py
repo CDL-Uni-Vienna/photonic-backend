@@ -165,6 +165,31 @@ def get_info(bus, address):
     # print(serialdev) #
     return serialdev
 
+def get_status(bus, address):
+    '''
+    Read the status from the respective Thorlabs Rotation Motor
+    connected to address on bus
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+
+    Returns
+    -------
+    status : Status of the device
+    '''
+    command = str(address) + 'gs'
+    write_to_device(bus, address, command)
+    line = bus.readline() # read and return one line from the stream
+    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
+    # print('---') #
+    print(line) 
+    status = line#[5:13] # hexa format, string type, e.g. b'08B7B'
+    # print('---') #
+    # print(status) #
+    return status
+
 def move_abs(bus, address, angle_degrees):
     '''
     Move to an absolute positive angle
