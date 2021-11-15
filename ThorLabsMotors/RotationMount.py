@@ -7,6 +7,7 @@ This library is Copyright © 2020-2021, Juan C Loredo, Felix Zilk
 
 from math import floor
 import serial
+import time
 
 
 def open_serial(com_port, timeout = None):
@@ -67,8 +68,8 @@ def hexa_toangle(hexa_str):
     -------
     angle_degree : Number in deegrees as float type
     '''
-    print('---')
-    print(hexa_str)
+    #print('---')
+    #print(hexa_str)
     if hexa_str != b'\n':
         npulses_total = 143360 # equal to int('23000')
         angle_degree = int(hexa_str, 16)/npulses_total*360
@@ -132,12 +133,13 @@ def get_position(bus, address):
     write_to_device(bus, address, command)
     line = bus.readline() # read and return one line from the stream
     # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
-    print('---')
-    print(line)
+    #print('---')
+    #print(line)
     hex = line[4:11] # hexa format, string type, e.g. b'08B7B'
-    print('---')
-    print(hex)
+    #print('---')
+    #print(hex)
     angle = hexa_toangle(hex)
+    print(angle)
     return angle
 
 def get_info(bus, address):
@@ -203,6 +205,54 @@ def move_abs(bus, address, angle_degrees):
     # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
     command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
+
+def move_abs_n_hear(bus, address, angle_degrees):
+    '''
+    Move to an absolute positive angle
+
+    Parameters
+    ----------
+    bus     : Serial port object which is returned from open_serial
+    address : Positive integer which specifies the bus address of the device
+    angle_degrees : Value for absolute positive angle
+    '''
+    # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
+    command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
+    write_to_device(bus, address, command)
+    
+    time.sleep(0.1)
+   
+    line = bus.readline()
+
+    time.sleep(0.1)
+
+    line = line.decode('utf-8')
+
+    reply_type =  line[1:3]
+    
+    mssg = 'RotationMount.move_abs_n_hear :: Device in address ' + str(address) + ' '
+
+    if reply_type == 'PO':
+        hex = line[4:11]
+        angle = hexa_toangle(hex)
+        print(mssg + 'moved to ' + str(angle) + '° (' + line[:-2] + ')')
+        if abs(angle_degrees-angle) > 0.01:
+            print(mssg + 'did not converge to the angle within the tolerance (0,01°)')
+            print(mssg + 'is trying again')
+            move_abs_n_hear(bus, address, angle_degrees)
+            time.sleep(2)
+    elif reply_type == 'GS':
+        print(mssg + 'replied error: ' + line[:-2] )
+        print(mssg + 'is trying again')
+        move_abs_n_hear(bus, address, angle_degrees)
+        time.sleep(2)
+    elif reply_type == '':
+        print(mssg + 'did not reply ' )
+        print(mssg + 'is being contacted again')
+        move_abs_n_hear(bus, address, angle_degrees)
+        time.sleep(2)
+    else:
+        print(mssg + 'replied unknown message: ' + reply_type)
 
 def move_fw(bus, address, angle_degrees):
     '''

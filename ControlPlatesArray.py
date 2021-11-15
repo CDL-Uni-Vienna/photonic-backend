@@ -1,4 +1,4 @@
-from ThorLabsMotors.RotationMount import move_abs, open_serial, get_info
+from ThorLabsMotors.RotationMount import get_position, get_status, move_abs, move_abs_n_hear, open_serial, get_info
 from Settings.measurement_settings import setupDic
 from utilFunc import flatten
 import Settings.com_settings as com_settings
@@ -88,7 +88,7 @@ class PlatesArray:
         Initialize serial ports
         '''
         for device_port in self.ports_nonDup:
-            bus = open_serial(device_port)
+            bus = open_serial(device_port,  timeout=10)
             self.portsToBusDic[device_port] = bus
 
     def fina(self):
@@ -104,7 +104,6 @@ class PlatesArray:
         Set plates in a particular set of angles specified by angles_list (ordered)
         '''
         for num, angle in enumerate(angles_list):
-            move_abs(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle ) 
-            time.sleep(5)
+            move_abs_n_hear(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle )
+            time.sleep(0.1)
             # TODO: add offset from setupDic #
-
