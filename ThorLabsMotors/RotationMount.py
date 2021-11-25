@@ -8,6 +8,7 @@ This library is Copyright © 2020-2021, Juan C Loredo, Felix Zilk
 from math import floor
 import serial
 import time
+from random import uniform
 
 
 def open_serial(com_port, timeout = None):
@@ -159,12 +160,11 @@ def get_info(bus, address):
     command = str(address) + 'in'
     write_to_device(bus, address, command)
     line = bus.readline() # read and return one line from the stream
-    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
-    # print('---') #
-    # print(line) #
+    if line != b'':
+        print(line)
+        # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
     serialdev = line[5:13] # hexa format, string type, e.g. b'08B7B'
-    # print('---') #
-    # print(serialdev) #
+    
     return serialdev
 
 def get_status(bus, address):
@@ -206,7 +206,7 @@ def move_abs(bus, address, angle_degrees):
     command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
 
-def move_abs_n_hear(bus, address, angle_degrees):
+def move_abs_n_hear(bus, address, angle_degrees, iterations):
     '''
     Move to an absolute positive angle
 
@@ -215,7 +215,13 @@ def move_abs_n_hear(bus, address, angle_degrees):
     bus     : Serial port object which is returned from open_serial
     address : Positive integer which specifies the bus address of the device
     angle_degrees : Value for absolute positive angle
+    iterations: Carry the number of iterations tried (used to avoid inf self calling loop)
     '''
+    wtime = 0.5
+    max_iterations = 20
+    tolerance = 0.01
+
+    iterations = iterations + 1
     # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
     command = str(address) + 'ma' + to8_format(angle_tohexa(angle_degrees))
     write_to_device(bus, address, command)
@@ -231,28 +237,41 @@ def move_abs_n_hear(bus, address, angle_degrees):
     reply_type =  line[1:3]
     
     mssg = 'RotationMount.move_abs_n_hear :: Device in address ' + str(address) + ' '
+    mssgappend = ' [ Iteration: ' + str(iterations) + ' ]'
 
-    if reply_type == 'PO':
+    if iterations >= max_iterations:
+        print(mssg + 'failed to converge after maximum number of attemps' + mssgappend + ' ERROR')
+        return None
+    elif reply_type == 'PO':
         hex = line[4:11]
         angle = hexa_toangle(hex)
-        print(mssg + 'moved to ' + str(angle) + '° (' + line[:-2] + ')')
-        if abs(angle_degrees-angle) > 0.01:
-            print(mssg + 'did not converge to the angle within the tolerance (0,01°)')
-            print(mssg + 'is trying again')
-            move_abs_n_hear(bus, address, angle_degrees)
-            time.sleep(2)
+        print(mssg + 'moved to ' + str(angle) + '° (' + line[:-2] + ')' + mssgappend)
+        if abs(angle_degrees-angle) > tolerance:
+            print(mssg + 'did not converge to the angle within the tolerance ('+ str(tolerance) +'°)' + mssgappend)
+            print(mssg + 'is trying a two steps approach' + mssgappend)
+            time.sleep(wtime)
+            move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+            time.sleep(wtime)
+            move_abs_n_hear(bus, address, angle_degrees, iterations)
     elif reply_type == 'GS':
-        print(mssg + 'replied error: ' + line[:-2] )
-        print(mssg + 'is trying again')
-        move_abs_n_hear(bus, address, angle_degrees)
-        time.sleep(2)
+        print(mssg + 'replied error: ' + line[:-2] + mssgappend )
+        print(mssg + 'is trying a two steps approach' + mssgappend )
+        #move_abs_n_hear(bus, address, (angle_degrees + uniform(5.0 , 10.0)) % 360, iterations )
+        move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+        time.sleep(wtime)
+        move_abs_n_hear(bus, address, angle_degrees, iterations)
     elif reply_type == '':
-        print(mssg + 'did not reply ' )
-        print(mssg + 'is being contacted again')
-        move_abs_n_hear(bus, address, angle_degrees)
-        time.sleep(2)
+        print(mssg + 'did not reply' + mssgappend )
+        #print(mssg + 'is being contacted again' + mssgappend )
+        #time.sleep(1)
+        #move_abs_n_hear(bus, address, angle_degrees, iterations)
+        print(mssg + 'is trying a two steps approach' + mssgappend )
+        move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+        time.sleep(wtime)
+        move_abs_n_hear(bus, address, angle_degrees, iterations)
     else:
-        print(mssg + 'replied unknown message: ' + reply_type)
+        time.sleep(wtime)
+        print(mssg + 'replied unknown message: ' + reply_type + mssgappend )
 
 def move_fw(bus, address, angle_degrees):
     '''

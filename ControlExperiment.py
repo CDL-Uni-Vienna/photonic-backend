@@ -60,6 +60,8 @@ class Experiment:
             self.encodedQubitMeasurements
             ]))
 
+        self.platesAngles = [*map( lambda ang: ang % 360, self.platesAngles )]
+
         print(self.platesAngles)
 
     def rawExecute(self):

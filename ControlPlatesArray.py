@@ -104,6 +104,6 @@ class PlatesArray:
         Set plates in a particular set of angles specified by angles_list (ordered)
         '''
         for num, angle in enumerate(angles_list):
-            move_abs_n_hear(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle )
+            move_abs_n_hear(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle, 0 )
             time.sleep(0.1)
             # TODO: add offset from setupDic #
