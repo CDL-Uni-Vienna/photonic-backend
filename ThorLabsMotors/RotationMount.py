@@ -218,7 +218,7 @@ def move_abs_n_hear(bus, address, angle_degrees, iterations):
     iterations: Carry the number of iterations tried (used to avoid inf self calling loop)
     '''
     wtime = 0.5
-    max_iterations = 20
+    max_iterations = 10
     tolerance = 0.01
 
     iterations = iterations + 1
@@ -250,23 +250,22 @@ def move_abs_n_hear(bus, address, angle_degrees, iterations):
             print(mssg + 'did not converge to the angle within the tolerance ('+ str(tolerance) +'°)' + mssgappend)
             print(mssg + 'is trying a two steps approach' + mssgappend)
             time.sleep(wtime)
-            move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+            move_abs(bus, address,uniform(10 , 350) )
             time.sleep(wtime)
             move_abs_n_hear(bus, address, angle_degrees, iterations)
     elif reply_type == 'GS':
         print(mssg + 'replied error: ' + line[:-2] + mssgappend )
         print(mssg + 'is trying a two steps approach' + mssgappend )
-        #move_abs_n_hear(bus, address, (angle_degrees + uniform(5.0 , 10.0)) % 360, iterations )
-        move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+        time.sleep(wtime)
+        #move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+        move_abs(bus, address, uniform(10 , 350) )
         time.sleep(wtime)
         move_abs_n_hear(bus, address, angle_degrees, iterations)
     elif reply_type == '':
         print(mssg + 'did not reply' + mssgappend )
-        #print(mssg + 'is being contacted again' + mssgappend )
-        #time.sleep(1)
-        #move_abs_n_hear(bus, address, angle_degrees, iterations)
+        time.sleep(wtime)
         print(mssg + 'is trying a two steps approach' + mssgappend )
-        move_abs(bus, address, (angle_degrees + uniform(0.5 , 2.0)) % 360 )
+        move_abs(bus, address, uniform(10 , 350) )
         time.sleep(wtime)
         move_abs_n_hear(bus, address, angle_degrees, iterations)
     else:
