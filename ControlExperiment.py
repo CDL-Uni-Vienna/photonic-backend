@@ -1,4 +1,4 @@
-from utilFunc import flatten, thphToPlatesAngles
+from utilFunc import flatten, thphToPlatesAngles, alphaToPlatesAngles
 import json
 import os
 from ControlPlatesArray import PlatesArray
@@ -37,10 +37,14 @@ class Experiment:
 
         # Cluster state preparation
         self.clusterStatePrepPaths = [0]
-        self.clusterStatePrep = {
-            "Linear Cluster": [[22.5]],
-            "Greenberger–Horne–Zeilinger": [[0]]
-        }[self.circuitLib["csp_preset_settings_name"]]
+        prename = self.circuitLib["csp_preset_settings_name"]
+        if prename == "Linear Cluster":
+            self.clusterStatePrep = [[22.5]]
+        elif prename == "Greenberger–Horne–Zeilinger":
+            self.clusterStatePrep = [[0]]
+        else:
+            print('not recognizible csp_preset_settings_name')
+
 
         # Qubit computing angles
         if len(self.circuitAngles) > 0:
@@ -48,7 +52,11 @@ class Experiment:
             self.circuitAnglesPaths = [
                 *map(lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)]
             self.circuitAngles = [
-                *map(lambda d: [45, (180-2*d["circuitAngleValue"])/8], self.circuitAngles)]
+                *map(lambda d: d["circuitAngleValue"], self.circuitAngles)]
+            if prename == "Linear Cluster":
+                self.circuitAngles = [*map(alphaToPlatesAngles, self.circuitAngles)]
+            elif prename == "Greenberger–Horne–Zeilinger":
+                self.circuitAngles = [*map(alphaToPlatesAngles, self.circuitAngles)]
         else:
             self.circuitAngles = []
 
@@ -58,8 +66,7 @@ class Experiment:
         self.encodedQubitMeasurements = [*map(lambda d: [
             d["theta"], d["phi"]
         ], self.encodedQubitMeasurements)]
-        self.encodedQubitMeasurements = [
-            *map(thphToPlatesAngles, self.encodedQubitMeasurements)]
+        self.encodedQubitMeasurements = [*map(thphToPlatesAngles, self.encodedQubitMeasurements)]
 
         # Merging all angles
         self.platesAngles = flatten(flatten([
@@ -81,6 +88,8 @@ class Experiment:
 
         for num, pp in enumerate(self.encodedQubitMeasurementsPaths):
             self.platesAnglesDic[pp] = self.encodedQubitMeasurements[num]
+
+        print(self.platesAnglesDic)
 
     def rawExecute(self):
         '''

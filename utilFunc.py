@@ -30,3 +30,7 @@ def thphToPlatesAngles(thph):
            tanTh*(cosPh*(1+sinPh2)+cosPh3*(secTh2+tanTh2)-2*sinPh*sqrtPhTh),
            1+sinPh2+cosPh2*(secTh2+tanTh2)+sin2Ph*tanTh2*sqrtPhTh)/4)
     ]
+
+def alphaToPlatesAngles(alpha):
+       
+    return [45, (180-2*alpha)/8]

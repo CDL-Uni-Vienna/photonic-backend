@@ -25,6 +25,8 @@ class PlatesArray:
         self.devices_known_ports = []
         self.devices_known_address = []
         self.devices_known_type = []
+        self.devices_known_path = []
+        self.devices_known_order = []
 
         self.ports_nonDup = []
 
@@ -59,6 +61,8 @@ class PlatesArray:
                     self.devices_known_ports.append(comPort)
                     self.devices_known_address.append(motorAddress)
                     self.devices_known_type.append(element['Type'])
+                    self.devices_known_path.append(element['Path'])
+                    self.devices_known_order.append(element['Order'])
 
         bus.close()
 
@@ -75,14 +79,6 @@ class PlatesArray:
 
         return [self.devices_known, self.devices_unkno]
 
-    def load(self):
-        '''
-        Loads all known devices using measurement_settings
-        '''
-        print('PlatesArray.load :: Loading known devices' )
-
-
-
     def init(self):
         '''
         Initialize serial ports
@@ -90,6 +86,7 @@ class PlatesArray:
         for device_port in self.ports_nonDup:
             bus = open_serial(device_port,  timeout=10)
             self.portsToBusDic[device_port] = bus
+        #let's home here
 
     def fina(self):
         '''
@@ -106,4 +103,9 @@ class PlatesArray:
         for num, angle in enumerate(angles_list):
             move_abs_n_hear(self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle, 0 )
             time.sleep(0.1)
-            # TODO: add offset from setupDic #
+
+    def setPath(self, path_id, angles_list):
+        '''
+        Set path's plates in a particular set of angles specified by angles_list (ordered)
+        '''
+
