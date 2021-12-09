@@ -1,4 +1,4 @@
-from ThorLabsMotors.RotationMount import get_position, get_status, move_abs, move_abs_n_hear, open_serial, get_info
+from ThorLabsMotors.RotationMount import home, move_abs_n_hear, open_serial, get_info
 from Settings.measurement_settings import setupDic
 from utilFunc import flatten
 import numpy as np
@@ -148,7 +148,7 @@ class PlatesArray:
                 msg + 'setting path: '+str(path_id))
 
             for num, device in enumerate(self.devicesDic[path_id]):
-
+                home(self.portsToBusDic[device[1]], device[2])
                 move_abs_n_hear(
                     self.portsToBusDic[device[1]], device[2], angles_list[num], 0)
                 time.sleep(0.1)
