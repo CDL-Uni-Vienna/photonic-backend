@@ -45,7 +45,6 @@ class Experiment:
         else:
             print('not recognizible csp_preset_settings_name')
 
-
         # Qubit computing angles
         if len(self.circuitAngles) > 0:
             #print( [*map( lambda d: self.circuitLib['circuit_tag2path_dic'][d["circuitAngleName"]], self.circuitAngles)])
@@ -54,9 +53,11 @@ class Experiment:
             self.circuitAngles = [
                 *map(lambda d: d["circuitAngleValue"], self.circuitAngles)]
             if prename == "Linear Cluster":
-                self.circuitAngles = [*map(alphaToPlatesAngles, self.circuitAngles)]
+                self.circuitAngles = [
+                    *map(alphaToPlatesAngles, self.circuitAngles)]
             elif prename == "Greenberger–Horne–Zeilinger":
-                self.circuitAngles = [*map(alphaToPlatesAngles, self.circuitAngles)]
+                self.circuitAngles = [
+                    *map(alphaToPlatesAngles, self.circuitAngles)]
         else:
             self.circuitAngles = []
 
@@ -66,7 +67,8 @@ class Experiment:
         self.encodedQubitMeasurements = [*map(lambda d: [
             d["theta"], d["phi"]
         ], self.encodedQubitMeasurements)]
-        self.encodedQubitMeasurements = [*map(thphToPlatesAngles, self.encodedQubitMeasurements)]
+        self.encodedQubitMeasurements = [
+            *map(thphToPlatesAngles, self.encodedQubitMeasurements)]
 
         # Merging all angles
         self.platesAngles = flatten(flatten([
@@ -112,9 +114,7 @@ class Experiment:
 
         p_array1.init()
 
-        # for num, device_k in enumerate(p_array1.devices_known):
-
-        # Moving the plates to their angles
-        p_array1.setAngles(self.platesAngles)
+        for path in range(5):
+            p_array1.setPath(path, self.platesAnglesDic[path])
 
         p_array1.fina()

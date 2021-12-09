@@ -241,7 +241,7 @@ def move_abs(bus, address, angle_degrees):
     write_to_device(bus, address, command)
 
 
-def move_abs_n_hear(bus, address, angle_degrees, iterations):
+def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
     '''
     Move to an absolute positive angle
 
@@ -255,6 +255,7 @@ def move_abs_n_hear(bus, address, angle_degrees, iterations):
     wtime = 2.0
     max_iterations = 10
     tolerance = 0.02
+    angle_degrees = angle_degrees_in % 360
 
     iterations = iterations + 1
     # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
@@ -282,6 +283,7 @@ def move_abs_n_hear(bus, address, angle_degrees, iterations):
     elif reply_type == 'PO':
         hex = line[4:11]
         angle = hexa_toangle(hex)
+        angle = angle % 360
         print(mssg + 'moved to ' + str(angle) +
               '° (' + line[:-2] + ')' + mssgappend)
         if abs(angle_degrees-angle) > tolerance:
