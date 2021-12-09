@@ -1,4 +1,4 @@
-from utilFunc import flatten, thphToPlatesAngles, alphaToPlatesAngles
+from utilFunc import flatten, thphToPlatesAngles, alphaToPlatesAngles, had_corr
 import json
 import os
 from ControlPlatesArray import PlatesArray
@@ -90,6 +90,10 @@ class Experiment:
 
         for num, pp in enumerate(self.encodedQubitMeasurementsPaths):
             self.platesAnglesDic[pp] = self.encodedQubitMeasurements[num]
+
+        if prename == "Linear Cluster":
+            self.platesAnglesDic[1] = had_corr(self.platesAnglesDic[1])
+            self.platesAnglesDic[4] = had_corr(self.platesAnglesDic[4])
 
         print(self.platesAnglesDic)
 
