@@ -147,3 +147,9 @@ dmypy.json
 # End of https://www.gitignore.io/api/python,vagrant
 eb-package.zip
 static/
+
+# Passwords
+RestCalls/pw/
+
+# Old files and folders
+#RestCalls/RestCallsOld/
