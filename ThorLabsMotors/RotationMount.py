@@ -1,8 +1,6 @@
 """
 Control library for ThorLabs Rotation Mount with Resonant Piezoelectric Motors
 based on serial commands and the pySerial module
-
-This library is Copyright © 2020-2021, Juan C Loredo, Felix Zilk
 """
 
 from math import floor

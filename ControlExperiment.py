@@ -5,6 +5,7 @@ from ControlPlatesArray import PlatesArray
 
 
 class Experiment:
+    """"""
 
     def __init__(self, expeDic: dict):
         '''
@@ -16,9 +17,9 @@ class Experiment:
         '''
 
         self.circuitId = expeDic["circuitId"]
-        self.circuitAngles = expeDic["circuitAngles"]
+        self.circuitAngles = expeDic["ComputeSettings"]["qubitComputing"]["circuitAngles"]
         self.platesAnglesDic = {}
-        self.encodedQubitMeasurements = expeDic["encodedQubitMeasurements"]
+        self.encodedQubitMeasurements = expeDic["ComputeSettings"]["encodedQubitMeasurements"]
         print('Initializing experiment...\n\tcircuitId: ' + str(self.circuitId))
 
         d = os.getcwd()
@@ -91,24 +92,12 @@ class Experiment:
         for num, pp in enumerate(self.encodedQubitMeasurementsPaths):
             self.platesAnglesDic[pp] = self.encodedQubitMeasurements[num]
 
+        # Hadamard corrections are considered at qubits 1 and 4 for the Linear Cluster L4
         if prename == "Linear Cluster":
             self.platesAnglesDic[1] = had_corr(self.platesAnglesDic[1])
             self.platesAnglesDic[4] = had_corr(self.platesAnglesDic[4])
 
         print(self.platesAnglesDic)
-
-    def rawExecute(self):
-        '''
-        Execute the experiment aligning the plates in the raw order the experiment dictates
-        '''
-        p_array1 = PlatesArray(1)
-
-        p_array1.init()
-
-        # Moving the plates to their angles
-        p_array1.setAngles(self.platesAngles)
-
-        p_array1.fina()
 
     def execute(self):
         '''

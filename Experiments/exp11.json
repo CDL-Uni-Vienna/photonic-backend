@@ -1,24 +1,34 @@
 {
-    "circuitId": 11,
-    "circuitAngles": [
-        {
-            "circuitAngleName": "alpha",
-            "circuitAngleValue": 45
-        },
-        {
-            "circuitAngleName": "beta",
-            "circuitAngleValue": 30
-        },
-        {
-            "circuitAngleName": "gamma",
-            "circuitAngleValue": 12.5
-        }
-    ],
-    "encodedQubitMeasurements": [
-        {
-            "encodedQubitIndex": 1,
-            "theta": 45,
-            "phi": 22.5
-        }
-    ]
-}
+	"status": "IN QUEUE",
+	"experimentName": "test11",
+	"projectId": "22",
+	"maxRuntime": 5,
+	"circuitId": 11,
+	"ComputeSettings": {
+		"encodedQubitMeasurements": [{
+			"encodedQubitIndex": 1,
+			"theta": 135,
+			"phi": 122.5
+		}],
+		"qubitComputing": {
+			"circuitConfiguration": "horseshoe",
+			"circuitAngles": [{
+					"circuitAngleName": "alpha",
+					"circuitAngleValue": 300
+				},
+				{
+					"circuitAngleName": "beta",
+					"circuitAngleValue": 180
+				},
+				{
+					"circuitAngleName": "gamma",
+					"circuitAngleValue": 112.5
+				}
+			]
+		},
+		"clusterState": {
+			"presetSettings": "linear",
+			"amountQubits": 2
+		}
+	}
+}   
