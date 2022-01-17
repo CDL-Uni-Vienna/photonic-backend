@@ -7,7 +7,7 @@ from pw import passwords
 
 def login(useremail, userpassword):
     """Login"""
-    url = f"https://quco.exp.univie.ac.at/api/login/"
+    url = f"https://quco.exp.univie.ac.at/api/login"
     data = {"email": useremail,
             "password": userpassword}
     request = requests.post(
@@ -67,3 +67,6 @@ def patch_experiment(token, experimentId):
 
 def delete():
     """Delete"""
+
+
+login("felix.zilk@univie.ac.at", passwords.quco_admin_pw)

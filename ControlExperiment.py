@@ -1,3 +1,4 @@
+from ControlTimetagger import Timetagger
 from utilFunc import flatten, thphToPlatesAngles, alphaToPlatesAngles, had_corr
 import json
 import os
@@ -28,7 +29,8 @@ class Experiment:
 
         with open(d, "r") as read_file:
             self.circuitLib = json.load(read_file)
-            self.circuitLib = self.circuitLib[self.circuitId-1]  # Load the lib
+            # Load the lib. TODO: remove position usage to find circuitLib entry
+            self.circuitLib = self.circuitLib[self.circuitId-1]
 
     def getPlatesAngles(self):
         '''
@@ -99,9 +101,9 @@ class Experiment:
 
         print(self.platesAnglesDic)
 
-    def execute(self):
+    def setPlatesAngles(self):
         '''
-        Execute the experiment using path information
+        move the plates to the angles calculated in getPlatesAngles
         '''
         p_array1 = PlatesArray(1)
 
@@ -111,3 +113,14 @@ class Experiment:
             p_array1.setPath(path, self.platesAnglesDic[path])
 
         p_array1.fina()
+
+    # This section applied when the TT was connected to this PC
+    # def rawMeasure(self):
+    #     '''
+    #     usethe timetager
+    #     '''
+    #     timetagger = Timetagger()
+
+    #     timetagger.countrates()
+
+    #     timetagger.circuitOutput(self.circuitLib)

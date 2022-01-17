@@ -1,12 +1,17 @@
 {
 	"status": "IN QUEUE",
-	"experimentName": "test11",
-	"projectId": "22",
+	"experimentName": "test12",
+	"projectId": "23",
 	"maxRuntime": 5,
-	"circuitId": 11,
+	"circuitId": 12,
 	"ComputeSettings": {
 		"encodedQubitMeasurements": [{
 			"encodedQubitIndex": 1,
+			"theta": 135,
+			"phi": 122.5
+		},
+        {
+			"encodedQubitIndex": 2,
 			"theta": 135,
 			"phi": 122.5
 		}],
@@ -19,10 +24,6 @@
 				{
 					"circuitAngleName": "beta",
 					"circuitAngleValue": 180
-				},
-				{
-					"circuitAngleName": "gamma",
-					"circuitAngleValue": 112.5
 				}
 			]
 		},

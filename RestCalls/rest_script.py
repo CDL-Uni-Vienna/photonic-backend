@@ -1,11 +1,18 @@
 import requests
 import json
 
-url = "https://quco.exp.univie.ac.at/api/login"
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+url = "https://photonq.at/api/login"
 
 payload = json.dumps({
-    "username": "test@test.at",
-    "password": "test"
+    # "username": "test@test.at",
+    # "password": "test"
+    "username": "felix.zilk@univie.ac.at",
+    "password": "rHHe6PdpX8xHszYD!Wp6b.3."
 })
 headers = {
     'Content-Type': 'application/json',

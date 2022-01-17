@@ -1,11 +1,48 @@
 from math import sqrt
 
 
+def formatDic(expeDic: dict):
+    # Format the dictionary to get numbers as floats instead of strings
+    tempComputeSettings = expeDic["ComputeSettings"]
+
+    tempEncodedQubitMeasurements = tempComputeSettings["encodedQubitMeasurements"]
+    tempEncodedQubitMeasurements = [
+        *map(lambda dic: {
+            "encodedQubitIndex": dic["encodedQubitIndex"],
+            "theta": float(dic["theta"]),
+            "phi": float(dic["phi"])
+        }, tempEncodedQubitMeasurements)]
+    tempComputeSettings["encodedQubitMeasurements"] = tempEncodedQubitMeasurements
+
+    tempQubitComputing = tempComputeSettings["qubitComputing"]
+    tempCircuitAngles = tempQubitComputing["circuitAngles"]
+    tempCircuitAngles = [
+        *map(
+            lambda dic: {
+                "circuitAngleName": dic["circuitAngleName"],
+                "circuitAngleValue": float(dic["circuitAngleValue"])
+            },
+            tempCircuitAngles
+        )
+    ]
+    tempQubitComputing["circuitAngles"] = tempCircuitAngles
+    tempComputeSettings["qubitComputing"] = tempQubitComputing
+
+    print(tempQubitComputing)
+
+    tempExpeDic = expeDic
+    tempExpeDic["ComputeSettings"] = tempComputeSettings
+
+    return tempExpeDic
+
+
 def flatten(t):
     return [item for sublist in t for item in sublist]
 
 
 def thphToPlatesAngles(thph):
+    # Calculates the angles for the QWM and HWM in each encoded qubit path in order to rotate from the theta, phi state towards H
+    # These will be used to operate at the physical qubits usedas encoded qubits
     import numpy as np
 
     th = thph[0]
@@ -34,7 +71,8 @@ def thphToPlatesAngles(thph):
 
 
 def alphaToPlatesAngles(alpha):
-
+    # Calculates the angles for the QWM and HWM in each meas. path in order to rotate from the !alpha> towards H
+    # These will be used to operate at the physical qubits used for computation measurements
     return [45, (180-2*alpha)/8]
 
 
