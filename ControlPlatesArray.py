@@ -4,6 +4,8 @@ from utilFunc import flatten
 import numpy as np
 import Settings.com_settings as com_settings
 import time
+import json
+import os.path
 
 
 class PlatesArray:
@@ -26,9 +28,11 @@ class PlatesArray:
         self.devices_known = []
         self.devices_known_ports = []
         self.devices_known_address = []
-        self.devices_known_type = []
+
         self.devices_known_path = []
         self.devices_known_order = []
+        self.devices_known_type = []
+        self.devices_known_calAng = []
 
         self.devicesDic = dict()
 
@@ -67,9 +71,12 @@ class PlatesArray:
                     self.devices_known.append(device_sn)
                     self.devices_known_ports.append(comPort)
                     self.devices_known_address.append(motorAddress)
-                    self.devices_known_type.append(element['Type'])
+
                     self.devices_known_path.append(element['Path'])
                     self.devices_known_order.append(element['Order'])
+                    self.devices_known_type.append(element['Type'])
+                    self.devices_known_calAng.append(
+                        element['CalibrationAngle'])
 
         bus.close()
 
@@ -86,54 +93,124 @@ class PlatesArray:
         print('PlatesArray.census :: ' + str(len(self.devices_unkno)) +
               ' unknown devices found ' + str(self.devices_unkno))
 
+        # DO NOT alter the order of this lits
         self.devices_known_ll = [self.devices_known_path, self.devices_known_order,
-                                 self.devices_known_ports, self.devices_known_address]
+                                 self.devices_known_ports, self.devices_known_address, self.devices_known_calAng]
         self.devices_known_array = np.array(self.devices_known_ll)
         self.devices_known_array = self.devices_known_array.T
         self.devices_known_ll = self.devices_known_array.tolist()
 
-        for path in range(5):
+        self.nondup_paths = list(dict.fromkeys(self.devices_known_path))
+        self.devices = []
+
+        for path in self.nondup_paths:
 
             temp_device_list = []
 
+            i = 0
             for device in self.devices_known_ll:
 
                 if str(path) == device[0]:
+
+                    self.devices.append([path, i])
+                    i = i + 1
+
                     temp_device_list.append(device[1:])
 
             temp_device_list = sorted(temp_device_list, key=lambda dd: dd[0])
 
             self.devicesDic[path] = temp_device_list
+        # print(self.devicesDic)
+        with open("Settings/devicesDicIn.json", "w") as dic_file:
+            json.dump(self.devicesDic, dic_file)
 
         # print(self.devicesDic)
+        # print(self.devices)
+        # print(len(self.devices))
+        # print(9999)
+        # print(self.portsToBusDic)
 
         return [self.devices_known, self.devices_unkno]
+
+    def calibration_update(self):
+
+        msg = 'PlatesArray.calibration_update :: '
+
+        cal_file = "Settings/devicesDicTemp.json"
+
+        if os.path.isfile(cal_file):
+            print(msg + "Updating devicesDic from " + cal_file)
+            with open(cal_file, "r") as dic_file:
+                self.devicesDic = json.load(dic_file)
+
+                tempDic = {}
+
+                for key, value in self.devicesDic.items():
+                    tempDic[int(key)] = value
+
+                self.devicesDic = tempDic
+
+    def calibration_save(self, path: int, order: int, correction: float):
+
+        msg = 'PlatesArray.calibration_save :: '
+
+        cal_file = "Settings/devicesDicTemp.json"
+
+        print(self.devicesDic)
+        print("Here")
+
+        new_device_item = self.devicesDic[path]
+
+        old_zero = new_device_item[order][3]
+        new_zero = float(old_zero) + correction
+
+        new_device_item[order][3] = new_zero
+        # It's 3 because is the index where the calibration angle is located
+
+        self.devicesDic[path] = new_device_item
+
+        print(msg + "Saving devicesDic at " + cal_file)
+        with open(cal_file, "w") as dic_file:
+            json.dump(self.devicesDic, dic_file)
 
     def init(self):
         '''
         Initialize serial ports
         '''
+
+        msg = 'PlatesArray.init :: '
+
         for device_port in self.ports_nonDup:
             bus = open_serial(device_port,  timeout=10)
             self.portsToBusDic[device_port] = bus
         # let's home here
+        for key, values in self.devicesDic.items():
+            # print(values)
+            print(msg + 'Homing path ' + str(key))
+            for device in values:
+                home(self.portsToBusDic[device[1]], device[2])
 
     def fina(self):
         '''
         Close serial ports
         '''
+
+        msg = 'PlatesArray.fina :: '
+
         for device_port in self.ports_nonDup:
+            print(msg + 'Closing ' + device_port + ' port')
             bus = self.portsToBusDic[device_port]
             bus.close()
 
-    def setAngles(self, angles_list):
-        '''
-        Set plates in a particular set of angles specified by angles_list (ordered)
-        '''
-        for num, angle in enumerate(angles_list):
-            move_abs_n_hear(
-                self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle, 0)
-            time.sleep(0.1)
+    # Deprecated
+    # def setAngles(self, angles_list):
+    #     '''
+    #     Set plates in a particular set of angles specified by angles_list (ordered)
+    #     '''
+    #     for num, angle in enumerate(angles_list):
+    #         move_abs_n_hear(
+    #             self.portsToBusDic[self.devices_known_ports[num]], self.devices_known_address[num], angle, 0)
+    #         time.sleep(0.1)
 
     def setPath(self, path_id, angles_list):
         '''
@@ -142,17 +219,46 @@ class PlatesArray:
 
         msg = 'PlatesArray.setPath :: '
 
+        self.calibration_update()
+
         if len(angles_list) == len(self.devicesDic[path_id]):
 
             print(
-                msg + 'setting path: '+str(path_id))
+                msg + 'Setting path: '+str(path_id))
 
             for num, device in enumerate(self.devicesDic[path_id]):
-                home(self.portsToBusDic[device[1]], device[2])
+                # home(self.portsToBusDic[device[1]], device[2])
                 move_abs_n_hear(
-                    self.portsToBusDic[device[1]], device[2], angles_list[num], 0)
+                    self.portsToBusDic[device[1]], device[2], float(device[3]) + angles_list[num], 0)
                 time.sleep(0.1)
 
         else:
             print(
                 msg + 'angles_list do not match the Path number of elements (ERROR)')
+
+    def setPlate(self, path_id: int, order: int, angle: float):
+        '''
+        Set a plates in a particular angle
+        '''
+
+        msg = 'PlatesArray.setPlate :: '
+
+        self.calibration_update()
+
+        # + str(self.devicesDic[path_id][order]))
+        print(msg + 'Setting ' +
+              str([path_id, order]) + ' plate at ' + str(angle) + '°')
+
+        # print(self.devicesDic)
+        device = self.devicesDic[path_id][order]
+
+        # home(self.portsToBusDic[device[1]], device[2])
+        calAng = float(device[3])
+        angle_out = move_abs_n_hear(
+            self.portsToBusDic[device[1]], device[2], calAng + angle, 0)
+        # self.portsToBusDic[device[1]], device[2], angle, 0)
+        time.sleep(0.1)
+
+        angle_out = float(angle_out) - calAng
+
+        return angle_out

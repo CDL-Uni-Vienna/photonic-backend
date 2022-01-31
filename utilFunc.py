@@ -40,6 +40,23 @@ def flatten(t):
     return [item for sublist in t for item in sublist]
 
 
+def listToString(s):
+
+    # initialize an empty string
+    str1 = ""
+
+    # traverse in the string
+    for ele in s:
+        str1 += str(ele)
+
+    # return string
+    return str1
+
+
+def quad(x, a, sh_y, sh_x):
+    return a * (x-sh_x)**2 + sh_y
+
+
 def thphToPlatesAngles(thph):
     # Calculates the angles for the QWM and HWM in each encoded qubit path in order to rotate from the theta, phi state towards H
     # These will be used to operate at the physical qubits usedas encoded qubits

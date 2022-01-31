@@ -133,17 +133,24 @@ def get_position(bus, address):
     -------
     angle : Angle of position in degrees as calculated by hexa_toangle()
     '''
+
+    mssg = 'RotationMount.get_position :: Device in address ' + \
+        str(address) + ' '
+
     command = str(address) + 'gp'
     write_to_device(bus, address, command)
     line = bus.readline()  # read and return one line from the stream
-    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
-    # print('---')
-    # print(line)
+
+    reply_type = line[1:3]
+
+    if line == b'':
+        print(mssg + 'did not reply')
+        return None
+
     hex = line[4:11]  # hexa format, string type, e.g. b'08B7B'
-    # print('---')
-    # print(hex)
-    angle = hexa_toangle(hex)
-    print(angle)
+
+    angle = hexa_toangle(hex) % 360
+    # print(angle)
     return angle
 
 
@@ -164,9 +171,9 @@ def get_info(bus, address):
     command = str(address) + 'in'
     write_to_device(bus, address, command)
     line = bus.readline()  # read and return one line from the stream
-    if line != b'':
-        print(line)
-        # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
+    # if line != b'':
+    # print(line)
+    # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
     serialdev = line[5:13]  # hexa format, string type, e.g. b'08B7B'
 
     return serialdev
@@ -191,7 +198,7 @@ def get_status(bus, address):
     line = bus.readline()  # read and return one line from the stream
     # e.g. b'0PO00008B7B\r\n', line terminator b'\n' is for binary files
     # print('---') #
-    print(line)
+    # print(line)
     status = line  # [5:13] # hexa format, string type, e.g. b'08B7B'
     # print('---') #
     # print(status) #
@@ -252,8 +259,24 @@ def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
     '''
     wtime = 2.0
     max_iterations = 10
-    tolerance = 0.02
+    # tolerance = 0.02
+    tolerance = 0.01
     angle_degrees = angle_degrees_in % 360
+
+    # add to messages the COM port used, address is not enough to identify
+    mssg = 'RotationMount.move_abs_n_hear :: Device in address ' + \
+        str(address) + ' '
+
+    # If the current angle is already the target -> do not move and return current angle
+    current_ang = get_position(bus, address)
+
+    if current_ang != None:
+        if abs(angle_degrees-current_ang) <= tolerance:
+
+            print(mssg + "already at target angle interval (" +
+                  str(current_ang) + ")")
+
+            return current_ang
 
     iterations = iterations + 1
     # print('move ' + str(address) + ' to:', round(angle_degrees, 2))
@@ -270,8 +293,6 @@ def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
 
     reply_type = line[1:3]
 
-    mssg = 'RotationMount.move_abs_n_hear :: Device in address ' + \
-        str(address) + ' '
     mssgappend = ' [ Iteration: ' + str(iterations) + ' ]'
 
     if iterations >= max_iterations:
@@ -287,13 +308,18 @@ def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
         if abs(angle_degrees-angle) > tolerance:
             print(mssg + 'did not converge to the angle within the tolerance (' +
                   str(abs(angle_degrees-angle)) + '>' + str(tolerance) + '°)' + mssgappend)
-            print(mssg + 'is trying a two steps approach' + mssgappend)
+            # print(mssg + 'is trying a two steps approach' + mssgappend)
+            print(mssg + 'is trying a two steps approach (homing)' + mssgappend)
             time.sleep(wtime)
-            move_abs(bus, address, (angle_degrees +
-                     uniform(0.001, tolerance)) % 360)
+            # move_abs(bus, address, (angle_degrees +
+            #          uniform(0.001, tolerance)) % 360)
+            home(bus, address)
             #move_abs(bus, address, uniform(10, 350))
             time.sleep(wtime)
-            move_abs_n_hear(bus, address, angle_degrees, iterations)
+            angle = move_abs_n_hear(bus, address, angle_degrees, iterations)
+            return angle
+        else:
+            return angle
     elif reply_type == 'GS':
         print(mssg + 'replied error: ' + line[:-2] + mssgappend)
         print(mssg + 'is trying a two steps approach' + mssgappend)
@@ -303,7 +329,8 @@ def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
                  uniform(0.001, tolerance)) % 360)
         #move_abs(bus, address, uniform(10, 350))
         time.sleep(wtime)
-        move_abs_n_hear(bus, address, angle_degrees, iterations)
+        angle = move_abs_n_hear(bus, address, angle_degrees, iterations)
+        return angle
     elif reply_type == '':
         print(mssg + 'did not reply' + mssgappend)
         time.sleep(wtime)
@@ -312,7 +339,8 @@ def move_abs_n_hear(bus, address, angle_degrees_in, iterations):
                  uniform(0.001, tolerance)) % 360)
         #move_abs(bus, address, uniform(10, 350))
         time.sleep(wtime)
-        move_abs_n_hear(bus, address, angle_degrees, iterations)
+        angle = move_abs_n_hear(bus, address, angle_degrees, iterations)
+        return angle
     else:
         time.sleep(wtime)
         print(mssg + 'replied unknown message: ' + reply_type + mssgappend)
@@ -353,6 +381,8 @@ def move_bw(bus, address, angle_degrees):
 def set_offset(bus, address, angle_degrees):
     '''
     Set home angle for respective Thorlabs Motor connected to address on bus
+
+    WARNING: Always write factory offset before changing its value
 
     Parameters
     ----------
