@@ -27,6 +27,11 @@ class Timetagger:
 
         mssg = 'Timetagger.countrates :: '
 
+        tt_channel = self.ttDicInv[str([path, pol])]
+
+        # print(mssg + "Addressing channel " +
+        #       str([self.ttDicInv[str([path, pol])]]))
+
         ctr = Countrate(self.ttn, [self.ttDicInv[str([path, pol])]])
 
         ctr.startFor(int(1e12))
@@ -39,7 +44,7 @@ class Timetagger:
 
         # freeTimeTagger(self.ttn)
 
-        print(mssg + "Countrate: " + str(ctrData))
+        print(mssg + "Channel " + str(tt_channel) + "countrate: " + str(ctrData))
 
         return ctrData
 

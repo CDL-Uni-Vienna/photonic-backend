@@ -130,6 +130,8 @@ class PlatesArray:
         # print(9999)
         # print(self.portsToBusDic)
 
+        self.calibration_update_active = False
+
         return [self.devices_known, self.devices_unkno]
 
     def calibration_update(self):
@@ -156,8 +158,7 @@ class PlatesArray:
 
         cal_file = "Settings/devicesDicTemp.json"
 
-        print(self.devicesDic)
-        print("Here")
+        self.calibration_update_active = True
 
         new_device_item = self.devicesDic[path]
 
@@ -219,7 +220,8 @@ class PlatesArray:
 
         msg = 'PlatesArray.setPath :: '
 
-        self.calibration_update()
+        # if self.calibration_update_active:
+        #     self.calibration_update()
 
         if len(angles_list) == len(self.devicesDic[path_id]):
 
@@ -243,7 +245,8 @@ class PlatesArray:
 
         msg = 'PlatesArray.setPlate :: '
 
-        self.calibration_update()
+        # if self.calibration_update_active:
+        #     self.calibration_update()
 
         # + str(self.devicesDic[path_id][order]))
         print(msg + 'Setting ' +

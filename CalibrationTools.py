@@ -5,7 +5,7 @@ from ControlPlatesArray import PlatesArray
 from time import sleep
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from utilFunc import quad
+from utilFunc import flatten, quad
 from numpy import arange, polyfit, poly1d
 from operator import itemgetter
 from json import dump, load
@@ -106,7 +106,8 @@ class Calibration:
 
         det_path, det_pol = detector
 
-        mssg = mssg + "Plates " + str(plates) + ", Detector " + str(detector)
+        mssg = mssg + "Plates " + str(plates) + \
+            ", Detector " + str(detector) + " "
 
         num_plates = len(plates)
 
@@ -123,7 +124,11 @@ class Calibration:
 
             print(mssg + "Minimizing with " + str(num_plates) + " plates")
 
+            min_ang_list = []
+
             for num, plate in enumerate(plates):
+
+                self.pa.calibration_update()
 
                 ang = plates_angles[num]
 
@@ -136,6 +141,10 @@ class Calibration:
                 print(mssg + "Correcting [" + str(plate) +
                       "] plate by " + str(correction) + "°")
                 self.pa.calibration_save(plate[0], plate[1], correction)
+
+                min_ang_list.append(min_ang)
+
+            return min_ang_list
 
     def measureAround(self, path: int, order: int, detector: list, angle: float):
         '''
@@ -196,6 +205,8 @@ class Calibration:
         # Plotting
         # Here we can add the type and position of the plate
         title = "Plate " + str([path, order]) + ", Detector " + str(detector)
+        plot_filename = "p" + str(path) + str(order) + \
+            "_d" + str(detector[0]) + str(detector[1]) + "_a" + str(int(float))
         plt.title(title)
         plt.xlabel("Plate angle (°)")
         plt.ylabel("Countrate ")  # Here datector identifier needs to be added
@@ -217,72 +228,115 @@ class Calibration:
 
         # plt.show()
         # plt.savefig("Calibration/temp/" + title + ".svg", format="svg")
-        plt.savefig("Calibration/temp/" + title + ".png", format="png")
+        plt.savefig("Calibration/temp/" + plot_filename + ".png", format="png")
 
         plt.clf()
 
         return min_angle
 
-        def measureInterval(self, path: int, order: int, detector: list, angle_int: list, num_points: int):
-            '''
-            Given the preliminary calibration angle of a waveplate (see Seetings) a scan along an interval is done while countrates measured are acquired at specified channel.
-            The waveplate to move is identified by the path in which it is and its position given by the order parameter ( 0, 1, ... ).
-            The channel from which countrates will be measured is specified by the detector input parameter. It is formated as [ path_id, polarization ]
+    def measureInterval(self, path: int, order: int, detectors: list, angle_int: list, num_points: int):
 
-            Parameters
-            ----------
-            path: The path in which the waveplate to move is located
-            order: Answers the question, in which position in the specified path is the waveplate placed? answers are given using index notation 0, 1, ...
-            detector: Specify the detector to use for measurement using the notation [path, pol]
-            angle_int: Specify the angle interval within which the waveplate rotates [ angle1, angle2]
-            num_points: number of points to measure along the specified interval
+        angles_out_perDet = {}
+        countrates_out_perDet = {}
 
-            Fixed parameters
-            ----------
-            pointNum: number of points to measure
-            '''
+        title = "Plate " + str([path, order]) + ", Detector " + str(detectors)
 
-            mssg = 'Calibration.measureInterval :: Plate ' + \
-                str([path, order]) + ', Detector ' + str(detector) + ' '
+        flatten(detectors)
 
-            if len(angle_int) != 2:
-                print(
-                    mssg + ' angle interval (angle_int) must be a list with len=2 (ERROR)')
-                return None
+        # + str(detector[0]) + str(detector[1]) + "_a" + str(int(float))
+        plot_filename = "p" + str(path) + str(order) + "_"
 
-            self.allToZero()
+        plt.title(title)
+        plt.xlabel("Plate angle (°)")
+        plt.ylabel("Countrate ")
 
-            angle1, angle2 = angle_int
-            # angle1, angle2 = angle1 % 360, angle2 % 360
-            # angle_int_temp = [angle1, angle2]
-            # angle_int_temp = angle_int_temp.sort()
-            # angle1, angle2 = angle_int_temp
-            delta = angle2 - angle1
-            stp = delta/(num_points - 1)
+        for detector in detectors:
 
-            angles_out = []
-            countrates_out = []
+            plot_filename = plot_filename + "d" + \
+                str(detector[0]) + str(detector[1])
 
-            for i in range(num_points):
+            result = self.measureIntervalSingleDet(
+                path, order, detector, angle_int, num_points)
 
-                print(mssg + "Measuring at angle " +
-                      str(i+1) + "/" + str(num_points))
+            angles_out = result[0]
+            countrates_out = result[1]
 
-                angle_out = self.pa.setPlate(path, order, angle1 + i*stp)
+            plt.plot(angles_out, countrates_out, "o")
 
-                countrate_out = self.tt.countrate(detector[0], detector[1])
-                countrate_out = countrate_out.tolist()[0]
+            angles_out_perDet[str(detector)] = angles_out
+            countrates_out_perDet[str(detector)] = countrates_out
 
-                angles_out.append(angle_out)
-                countrates_out.append(countrate_out)
+        plot_filename = plot_filename + "_a" + \
+            str(angle_int[0]) + str(angle_int[1])
 
-            # Plotting
-            # Here we can add the type and position of the plate
-            title = "Plate " + str([path, order]) + \
-                ", Detector " + str(detector)
-            plt.title(title)
-            plt.xlabel("Plate angle (°)")
-            # Here datector identifier needs to be added
-            plt.ylabel("Countrate ")
-            plt.plot(angles_out, countrates_out, "or")  # color="red")
-            plt.show()
+        plt.savefig("Calibration/temp/" + plot_filename + ".png", format="png")
+
+        plt.clf()
+
+        return angles_out_perDet, countrates_out_perDet
+
+    def measureIntervalSingleDet(self, path: int, order: int, detector: list, angle_int: list, num_points: int):
+        '''
+        A scan along an interval is done while countrates measured are acquired at specified channel.
+        The waveplate to move is identified by the path in which it is and its position given by the order parameter ( 0, 1, ... ).
+        The channel from which countrates will be measured is specified by the detector input parameter. It is formated as [ path_id, polarization ]
+
+        Parameters
+        ----------
+        path: The path in which the waveplate to move is located
+        order: Answers the question, in which position in the specified path is the waveplate placed? answers are given using index notation 0, 1, ...
+        detector: Specify the detector to use for measurement using the notation [path, pol]
+        angle_int: Specify the angle interval within which the waveplate rotates [ angle1, angle2]
+        num_points: number of points to measure along the specified interval
+
+        Fixed parameters
+        ----------
+        pointNum: number of points to measure
+        '''
+
+        mssg = 'Calibration.measureInterval :: Plate ' + \
+            str([path, order]) + ', Detector ' + str(detector) + ' '
+
+        if len(angle_int) != 2:
+            print(
+                mssg + ' angle interval (angle_int) must be a list with len=2 (ERROR)')
+            return None
+
+        self.allToZero()
+
+        angle1, angle2 = angle_int
+        # angle1, angle2 = angle1 % 360, angle2 % 360
+        # angle_int_temp = [angle1, angle2]
+        # angle_int_temp = angle_int_temp.sort()
+        # angle1, angle2 = angle_int_temp
+        delta = angle2 - angle1
+        stp = delta/(num_points - 1)
+
+        angles_out = []
+        countrates_out = []
+
+        for i in range(num_points):
+
+            print(mssg + "Measuring at angle " +
+                  str(i+1) + "/" + str(num_points))
+
+            angle_out = self.pa.setPlate(path, order, angle1 + i*stp)
+
+            countrate_out = self.tt.countrate(detector[0], detector[1])
+            countrate_out = countrate_out.tolist()[0]
+
+            angles_out.append(angle_out)
+            countrates_out.append(countrate_out)
+
+        return [angles_out, countrates_out]
+
+        # # Plotting
+        # # Here we can add the type and position of the plate
+        # title = "Plate " + str([path, order]) + \
+        #     ", Detector " + str(detector)
+        # plt.title(title)
+        # plt.xlabel("Plate angle (°)")
+        # # Here datector identifier needs to be added
+        # plt.ylabel("Countrate ")
+        # plt.plot(angles_out, countrates_out, "or")  # color="red")
+        # plt.show()

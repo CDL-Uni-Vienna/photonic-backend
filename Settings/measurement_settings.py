@@ -50,37 +50,37 @@ setupDic = {
         "Path": 1,
         "Order": 1,
         "Type": "QuarterWaveplate",
-        "CalibrationAngle": 9.5
+        "CalibrationAngle": 9.8051
     },
     b"11400508": {
         "Path": 1,
         "Order": 2,
         "Type": "HalfWaveplate",
-        "CalibrationAngle": 79.51
+        "CalibrationAngle": 79.7076
     },
     b"11400530": {
         "Path": 2,
         "Order": 1,
         "Type": "QuarterWaveplate",
-        "CalibrationAngle": 30.55
+        "CalibrationAngle": 31.0710
     },
     b"11400338": {
         "Path": 2,
         "Order": 2,
         "Type": "HalfWaveplate",
-        "CalibrationAngle": 41.04
+        "CalibrationAngle": 42.0387
     },
     b"11400556": {
         "Path": 3,
         "Order": 1,
         "Type": "QuarterWaveplate",
-        "CalibrationAngle": 98.49  # + 1.8
+        "CalibrationAngle": 97.9512
     },
     b"11400550": {
         "Path": 3,
         "Order": 2,
         "Type": "HalfWaveplate",
-        "CalibrationAngle": 35.57
+        "CalibrationAngle": 33.5602
     },
     b"11400547": {
         "Path": 4,
