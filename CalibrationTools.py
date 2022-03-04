@@ -10,6 +10,7 @@ from numpy import arange, polyfit, poly1d
 from operator import itemgetter
 from json import dump, load
 import os.path
+from statistics import mean, stdev
 
 
 class Calibration:
@@ -31,15 +32,10 @@ class Calibration:
         self.pa = PlatesArray(1)
         self.pa.init()
 
-        for device in self.pa.devices:
-            self.pa.setPlate(device[0], device[1], 0)
-            sleep(0.2)
+        self.res = 0.01
 
-    # def measureAroundZero(self, path: int, order: int, detector):
+        self.allToZero()  # Flag can be added not to do this twice
 
-    #     self.measureAround(path, order, detector, 0)
-
-    # Finalize calibration
     def fina(self):
 
         self.tt.close()
@@ -51,35 +47,85 @@ class Calibration:
             self.pa.setPlate(device[0], device[1], 0)
             sleep(0.2)
 
-    def minimizeCountsRep(self, plates: list, plates_angles: list, detector: list, rep: int):
+    def tomoSingleDet(self, path: int, pol: int):
 
-        mssg = 'Calibration.minimizeCountsRep :: '
+        stokes = []
 
-        min_ang_dataDic = {}
+        self.allToZero()
 
-        for i in range(rep):
-            kk = i
-            min_ang_dataDic[kk] = self.minimizeCounts(
-                plates, plates_angles, detector)
-        print(min_ang_dataDic)
+        crt = self.tt.countrate(path, pol)  # H
+        stokes.append(crt)
 
-        cal_file = 'Calibration/cal' + str(plates) + '.json'
+        self.pa.setPlate(path, 1, 45)
+        crt = self.tt.countrate(path, pol)  # V
+        stokes.append(crt)
 
-        if os.path.isfile(cal_file):
-            print(mssg + "Loading previous calibration file")
-            with open(cal_file, 'r') as json_file:
-                old_dataDic = load(json_file)
+        self.pa.setPlate(path, 0, 45)
+        self.pa.setPlate(path, 1, 22.5)
+        crt = self.tt.countrate(path, pol)  # D
+        stokes.append(crt)
 
-            updated_data = list(old_dataDic.values()) + \
-                list(min_ang_dataDic.values())
+        self.pa.setPlate(path, 1, -22.5)
+        crt = self.tt.countrate(path, pol)  # A
+        stokes.append(crt)
 
-            for num, data in enumerate(updated_data):
-                min_ang_dataDic[num] = data
+        self.pa.setPlate(path, 1, 0)
+        crt = self.tt.countrate(path, pol)  # R
+        stokes.append(crt)
 
-        with open(cal_file, 'w') as outfile:
-            dump(min_ang_dataDic, outfile)
+        self.pa.setPlate(path, 0, -45)
+        crt = self.tt.countrate(path, pol)  # L
+        stokes.append(crt)
+
+        stokes = [*map(lambda x: list(x)[0], stokes)]
+
+        print(stokes)
+
+        hh, vv, dd, aa, rr, ll = stokes
+
+        hv = hh + vv
+        da = dd + aa
+        rl = rr + ll
+
+        if pol == 0:
+            stokes = [
+                hh/hv,
+                vv/hv,
+                dd/da,
+                aa/da,
+                rr/rl,
+                ll/rl
+            ]
+            print(stokes)
+            return stokes
+        elif pol == 1:
+            stokes = [
+                vv/hv,
+                hh/hv,
+                aa/da,
+                dd/da,
+                ll/rl,
+                rr/rl
+            ]
+            print(stokes)
+            return stokes
 
     def minimizeCounts(self, plates: list, plates_angles: list, detector: list):
+        '''
+        Minimize countrate of detector using plates at plates_angles
+
+        Parameters
+        ----------
+        plates: list contatinig lists with two elements representing each plate [path order]
+            path: The path in which the waveplate to move is located
+            order: Answers the question, in which position in the specified path is the waveplate placed? answers are given using index notation 0, 1, ...
+        plates_angles: angles from which to start the iteration
+        detector: Specify the detector to use for measurement using the notation [path, pol]
+
+        Fixed parameters
+        ----------
+        rep: Number of iterations to do until criteria is implemented
+        '''
 
         mssg = 'Calibration.minimizeCounts :: '
 
@@ -100,51 +146,123 @@ class Calibration:
             return None
 
         if len(detector) != 2:
-            print(mssg + "Invalid detector identifier provided " +
+            print(mssg + "Invalid detector identifier provided for plate" +
                   str(plate) + " (Expected form: [path, polarization])")
             return None
 
         det_path, det_pol = detector
 
-        mssg = mssg + "Plates " + str(plates) + \
-            ", Detector " + str(detector) + " "
-
         num_plates = len(plates)
 
         if num_plates == 1:
 
-            print(mssg + "Minimizing with one plate")
+            mssg = mssg + "Plate " + \
+                str(plates[0]) + ", Detector " + str(detector) + " "
 
+            print(
+                mssg + "Minimizing with one plate. Iterating extreme location (measureAround).")
+
+            # plates contains contains only one element. Nevertheless using for seems appropiate considering the case when not.
             for num, plate in enumerate(plates):
+
+                plate_path = plate[0]
+                plate_order = plate[1]
+
+                # We fit a parabola once to get an idea where the extreme is
+                input_angle = plates_angles[num]
                 min_ang = self.measureAround(
-                    plate[0], plate[1], detector, plates_angles[num])
-                print(mssg + "Extreme found at " + str(min_ang) + "°")
-                return min_ang
+                    plate_path, plate_order, detector, input_angle)
+                min_ang = round(min_ang, 2)
+                print(mssg + "Extreme found at first approximation " +
+                      str(min_ang) + "°")
+
+                print(plate[0])
+                print(plate[1])
+                print(detector)
+                print([
+                    min_ang-0.5, min_ang+0.5])
+
+                result = self.measureInterval(plate[0], plate[1], detector, [
+                                              min_ang-0.5, min_ang+0.5], 11)
+
+                angles_out = result[0]
+                countrates_out = result[1]
+
+                plt.plot(angles_out, countrates_out, "o")
+
+                plt.show()
+
+                # for ii in range(max_rep):
+
+                #     # The line below works only moving one plate beacuase measureAround has already setted all the others at zero degrees
+                #     self.pa.setPlate(plate_path, plate_order, min_ang)
+
+                #     min_crt = self.tt.countrate(det_path, det_pol)
+
+                #     min_crt_list.append(min_crt)
+
+                #     min_ang_mean = mean(min_ang_list)
+                #     mean_list.append(min_ang_mean)
+
+                #     if ii > 0:
+                #         min_ang_stdv = stdev(min_ang_list)
+                #         stdv_list.append(min_ang_stdv)
+
+                #     print(
+                #         "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+                #     # If the stdev drops below max_stdv after at least 3 iteratons -> Return calibration angle and its stdev
+                #     if ii > 2 and min_ang_stdv < max_stdv:
+                #         print(
+                #             "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
+                #         print(mssg + "Minimum counts angle found at " +
+                #               str(min_ang_mean) + "(+-" + str(min_ang_stdv) + ")")
+
+                #         print("AAA")
+                #         # Below we plot how the mean angle with minimum countrates changed while we keep iterating
+                #         title = "Plate " + \
+                #             str([plate_path, plate_order]) + \
+                #             ", Detector " + str(detector)
+                #         plot_filename = "calM_p" + str(plate_path) + str(plate_order) + \
+                #             "_d" + \
+                #             str(detector[0]) + str(detector[1]) + \
+                #             "_a" + str(int(input_angle))
+                #         plt.title(title)
+                #         plt.xlabel("Iteration")
+                #         plt.ylabel("Angle (°)")
+                #         plt.plot(range(1, len(mean_list) + 1), mean_list, "or")
+                #         plt.savefig("Calibration/temp/" +
+                #                     plot_filename + ".png", format="png")
+                #         plt.clf()
+
         elif num_plates > 1:
 
             print(mssg + "Minimizing with " + str(num_plates) + " plates")
 
-            min_ang_list = []
+            mssg = mssg + "Plates " + \
+                str(plates) + ", Detector " + str(detector) + " "
 
-            for num, plate in enumerate(plates):
+            # min_ang_list = []
 
-                self.pa.calibration_update()
+            # for num, plate in enumerate(plates):
 
-                ang = plates_angles[num]
+            #     self.pa.calibration_update()
 
-                min_ang = self.measureAround(
-                    plate[0], plate[1], detector, ang)
-                print(mssg + "Extreme found at " + str(min_ang) + "°")
+            #     ang = plates_angles[num]
 
-                correction = min_ang - ang
+            #     min_ang = self.measureAround(
+            #         plate[0], plate[1], detector, ang)
+            #     print(mssg + "Extreme found at " + str(min_ang) + "°")
 
-                print(mssg + "Correcting [" + str(plate) +
-                      "] plate by " + str(correction) + "°")
-                self.pa.calibration_save(plate[0], plate[1], correction)
+            #     correction = min_ang - ang
 
-                min_ang_list.append(min_ang)
+            #     print(mssg + "Correcting [" + str(plate) +
+            #           "] plate by " + str(correction) + "°")
+            #     self.pa.calibration_save(plate[0], plate[1], correction)
 
-            return min_ang_list
+            #     min_ang_list.append(min_ang)
+
+            # return min_ang_list
 
     def measureAround(self, path: int, order: int, detector: list, angle: float):
         '''
@@ -171,7 +289,7 @@ class Calibration:
 
         self.allToZero()
 
-        pointNum = 32
+        pointNum = 8  # 32
         stp = 10.0/(pointNum - 1)
 
         angles_out = []
@@ -206,7 +324,7 @@ class Calibration:
         # Here we can add the type and position of the plate
         title = "Plate " + str([path, order]) + ", Detector " + str(detector)
         plot_filename = "p" + str(path) + str(order) + \
-            "_d" + str(detector[0]) + str(detector[1]) + "_a" + str(int(float))
+            "_d" + str(detector[0]) + str(detector[1]) + "_a" + str(int(angle))
         plt.title(title)
         plt.xlabel("Plate angle (°)")
         plt.ylabel("Countrate ")  # Here datector identifier needs to be added
@@ -241,7 +359,7 @@ class Calibration:
 
         title = "Plate " + str([path, order]) + ", Detector " + str(detectors)
 
-        flatten(detectors)
+        # flatten(detectors)
 
         # + str(detector[0]) + str(detector[1]) + "_a" + str(int(float))
         plot_filename = "p" + str(path) + str(order) + "_"
@@ -267,7 +385,7 @@ class Calibration:
             countrates_out_perDet[str(detector)] = countrates_out
 
         plot_filename = plot_filename + "_a" + \
-            str(angle_int[0]) + str(angle_int[1])
+            str(angle_int[0]) + "to" + str(angle_int[1])
 
         plt.savefig("Calibration/temp/" + plot_filename + ".png", format="png")
 

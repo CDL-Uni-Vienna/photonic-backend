@@ -121,58 +121,57 @@ class PlatesArray:
 
             self.devicesDic[path] = temp_device_list
         # print(self.devicesDic)
-        with open("Settings/devicesDicIn.json", "w") as dic_file:
-            json.dump(self.devicesDic, dic_file)
-
-        # print(self.devicesDic)
-        # print(self.devices)
-        # print(len(self.devices))
-        # print(9999)
-        # print(self.portsToBusDic)
-
-        self.calibration_update_active = False
 
         return [self.devices_known, self.devices_unkno]
 
-    def calibration_update(self):
+    def calibration_update(self, path: int, order: int, correction: float):
 
         msg = 'PlatesArray.calibration_update :: '
 
-        cal_file = "Settings/devicesDicTemp.json"
+        devices_in_path = self.devicesDic[path]
 
-        if os.path.isfile(cal_file):
-            print(msg + "Updating devicesDic from " + cal_file)
-            with open(cal_file, "r") as dic_file:
-                self.devicesDic = json.load(dic_file)
+        print(msg + str(devices_in_path))
 
-                tempDic = {}
+        devices_in_path[path][order] = devices_in_path[path][order] + correction
+        print(correction)
 
-                for key, value in self.devicesDic.items():
-                    tempDic[int(key)] = value
+        self.devicesDic[path] = devices_in_path
 
-                self.devicesDic = tempDic
+        print(msg + str(devices_in_path))
 
-    def calibration_save(self, path: int, order: int, correction: float):
+        # if os.path.isfile(cal_file):
+        #     print(msg + "Updating devicesDic from " + cal_file)
+        #     with open(cal_file, "r") as dic_file:
+        #         self.devicesDic = json.load(dic_file)
 
-        msg = 'PlatesArray.calibration_save :: '
+        #         tempDic = {}
 
-        cal_file = "Settings/devicesDicTemp.json"
+        #         for key, value in self.devicesDic.items():
+        #             tempDic[int(key)] = value
 
-        self.calibration_update_active = True
+        #         self.devicesDic = tempDic
 
-        new_device_item = self.devicesDic[path]
+    # def calibration_save(self, path: int, order: int, correction: float):
 
-        old_zero = new_device_item[order][3]
-        new_zero = float(old_zero) + correction
+    #     msg = 'PlatesArray.calibration_save :: '
 
-        new_device_item[order][3] = new_zero
-        # It's 3 because is the index where the calibration angle is located
+    #     cal_file = "Settings/devicesDicTemp.json"
 
-        self.devicesDic[path] = new_device_item
+    #     self.calibration_update_active = True
 
-        print(msg + "Saving devicesDic at " + cal_file)
-        with open(cal_file, "w") as dic_file:
-            json.dump(self.devicesDic, dic_file)
+    #     new_device_item = self.devicesDic[path]
+
+    #     old_zero = new_device_item[order][3]
+    #     new_zero = float(old_zero) + correction
+
+    #     new_device_item[order][3] = new_zero
+    #     # It's 3 because is the index where the calibration angle is located
+
+    #     self.devicesDic[path] = new_device_item
+
+    #     print(msg + "Saving devicesDic at " + cal_file)
+    #     with open(cal_file, "w") as dic_file:
+    #        json.dump(self.devicesDic, dic_file)
 
     def init(self):
         '''
@@ -190,6 +189,8 @@ class PlatesArray:
             print(msg + 'Homing path ' + str(key))
             for device in values:
                 home(self.portsToBusDic[device[1]], device[2])
+
+        return True
 
     def fina(self):
         '''
@@ -244,9 +245,6 @@ class PlatesArray:
         '''
 
         msg = 'PlatesArray.setPlate :: '
-
-        # if self.calibration_update_active:
-        #     self.calibration_update()
 
         # + str(self.devicesDic[path_id][order]))
         print(msg + 'Setting ' +
