@@ -100,13 +100,13 @@ setupDic = {
 # ttDic is a dictionary with the information of the time tagger channnel to detector+path+pol mapping
 ttDic = {
     1: [1, 0],
-    2: [2, 0],
-    12: [3, 0],
-    13: [4, 0],
-    8: [1, 1],
-    6: [2, 1],
-    5: [3, 1],
-    7: [4, 1],
+    3: [2, 0],
+    5: [3, 0],
+    7: [4, 0],
+    2: [1, 1],
+    4: [2, 1],
+    6: [3, 1],
+    8: [4, 1],
 }
 
 # ttDic = {

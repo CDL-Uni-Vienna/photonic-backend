@@ -1,0 +1,24 @@
+{
+	"status": "IN QUEUE",
+	"experimentName": "test1",
+	"projectId": "234",
+	"maxRuntime": 5,
+	"circuitId": 1,
+	"ComputeSettings": {
+		"encodedQubitMeasurements": [
+			{
+				"encodedQubitIndex": 1,
+				"theta": 0,
+				"phi": 0
+			}
+		],
+		"qubitComputing": {
+			"circuitConfiguration": "horseshoe",
+			"circuitAngles": []
+		},
+		"clusterState": {
+			"presetSettings": "linear",
+			"amountQubits": 1
+		}
+	}
+}

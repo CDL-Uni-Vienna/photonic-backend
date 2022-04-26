@@ -2,10 +2,12 @@ from contextlib import contextmanager, redirect_stdout
 from io import StringIO
 import streamlit as st
 from streamlit.script_run_context import add_script_run_ctx
+from streamlit.script_runner import StopException, RerunException
 import base64
 import textwrap
 from CalibrationTools import Calibration
 from ControlPlatesArray import PlatesArray
+from loop import Mainloop
 # Use the non-interactive Agg backend, which is recommended as a
 # thread-safe backend.
 # See https://matplotlib.org/3.3.2/faq/howto_faq.html#working-with-threads.
@@ -45,14 +47,8 @@ def st_capture(output_func):
 
 def init_plates():  # Initialize connection to plates array. Store init flag pa_init
 
-    # if 'code_display' not in st.session_state:
-    #     st.session_state['code_display'] = st.empty()
-
     if 'pa' not in st.session_state:
 
-        # output = st.empty()
-
-        # with st_capture(output.code):
         with st_capture(st.session_state['code_display'].code):
             st.session_state['pa'] = PlatesArray(1)
 
@@ -61,21 +57,16 @@ def init_plates():  # Initialize connection to plates array. Store init flag pa_
 
 def fina_plates():  # Close connection to plates array. Store init flag pa_init
 
-    # output = st.empty()
-    # st.session_state['code_display'] = st.empty()
-
     st.session_state['pa_init'] = False
 
-    # with st_capture(output.code):
     with st_capture(st.session_state['code_display'].code):
         st.session_state['pa'].fina()
 
+    # raise RerunException()
 
-def move_all_plates():  # Close connection to plates array. Store init flag pa_init
 
-    # st.session_state['code_display'] = st.empty()
+def move_all_plates():  #
 
-    # with st_capture(output.code):
     with st_capture(st.session_state['code_display'].code):
 
         if st.session_state['pa_init']:
@@ -98,6 +89,21 @@ def move_all_plates():  # Close connection to plates array. Store init flag pa_i
             st.session_state['pa'].setPlate(4, 1, ang_H4)
 
 
+def move_plate():  #
+
+    with st_capture(st.session_state['code_display'].code):
+
+        if st.session_state['pa_init']:
+
+            st.session_state['pa'].setPlate(path_id_tm, order_id_tm, ang4plate)
+
+
+def init_loop():
+
+    with st_capture(st.session_state['code_display_PhotonQ'].code):
+        Mainloop(5)
+
+
 if __name__ == '__main__':
 
     # -- Set page config
@@ -111,7 +117,7 @@ if __name__ == '__main__':
 
     mode_selectbox = st.sidebar.selectbox(
         'Select operation mode:',
-        ('General', 'Calibration', 'Tomography', 'QC')
+        ('General', 'Calibration', 'Tomography', 'PhotonQ')
     )
 
     plates_h = range(-4, 5)
@@ -126,11 +132,16 @@ if __name__ == '__main__':
 
         st.session_state['pa_init'] = False
 
+    if 'PhotonQ_init' not in st.session_state:
+
+        st.session_state['PhotonQ_init'] = False
+
     # General mode
     if mode_selectbox == "General":
 
         # Initialization of plastes rotation mounts
-        init_plates = st.sidebar.button(
+        # init_plates =
+        st.sidebar.button(
             'Connect to plates', disabled=st.session_state['pa_init'], on_click=init_plates)
 
         # Description
@@ -150,13 +161,6 @@ if __name__ == '__main__':
             # Close connection
             close = st.button(
                 'Close connection', disabled=not st.session_state['pa_init'], on_click=fina_plates)
-
-            # if close:
-
-            #     st.session_state['pa'].fina()
-
-            #     st.session_state['pa_init'] = False
-            #     print(st.session_state['pa_init'])
 
         # setup svg
         render_svg_setup()
@@ -189,9 +193,35 @@ if __name__ == '__main__':
             ang_H3 = st.number_input('Insert a H 3 angle', max_value=360)
             ang_H4 = st.number_input('Insert a H 4 angle', max_value=360)
 
+        plates_h = range(-4, 5)
+        plates_h = [*map(lambda x: 'Half-wave plate ' + str(x), plates_h)]
+
+        plates_q = range(1, 5)
+        plates_q = [*map(lambda x: 'Quarter-wave plate ' + str(x), plates_q)]
+
+        plates = plates_q + plates_h
+
+        # Move individual plate
+        #moveplate_form = st.form(key='moveplate_form')
+        # moveplate_form.selectbox(
+        #    'Select waveplate to move', plates)
+        # ang4plate = moveplate_form.number_input(
+        #    'Insert plate angle', max_value=360)
+        #moveplate_form.form_submit_button('Move plate ', on_click=move_plate)
+
         # Move all plates control
         move_all = st.button(
-            'Move all', disabled=not st.session_state['pa_init'], on_click=move_all_plates)
+            'Move all plates', disabled=not st.session_state['pa_init'], on_click=move_all_plates)
+
+        # Move individual plate
+        # plate_to_move = st.selectbox('Select waveplate to move', plates)
+
+        # path_id_tm = plate_to_move[0]
+        # order_id_tm = plate_to_move[1]
+
+        # ang4plate = st.number_input(
+        #     'Insert plate angle', max_value=360)
+        # move = st.button('Move plate ', on_click=move_plate)
 
         if close:
 
@@ -210,24 +240,13 @@ if __name__ == '__main__':
             detectors.append(detector + ',1')
 
         # Sidebar - Calibration
+        # Select plate and detector for calibration - FORM
         cali_form = st.sidebar.form(key='cali_form')
-        cali_form.selectbox(
+        plate_to_calibrate = cali_form.selectbox(
             'Select waveplate to calibrate', plates)
         cali_form.selectbox(
             'Select detector to use', detectors)
         cali_form.form_submit_button('Calibrate')
-
-        # plate = st.sidebar.selectbox(
-        #     'Select waveplate to calibrate', plates)
-
-        # detector = st.sidebar.selectbox(
-        #     'Select detector to use', detectors)
-
-        # init_button = st.sidebar.form_submit_button('Initialize')
-
-#            if init_button:
-#                cali = Calibration()
-#                cali.fina()
 
         # Main - Calibration
         st.header('Calibration')
@@ -247,10 +266,36 @@ if __name__ == '__main__':
 
         st.write('Tomography')
 
-    # QC mode
-    elif mode_selectbox == "QC":
+    # PhotonQ mode
+    elif mode_selectbox == "PhotonQ":
 
-        st.write('QC')
+        # Initialization of plastes rotation mounts
+        init_PhotonQ = st.sidebar.button(
+            'Turn On', disabled=st.session_state['pa_init'], on_click=init_loop)
+
+        # Description
+        if st.session_state['PhotonQ_init']:
+            conection_message = 'PhotonQ On'
+        else:
+            conection_message = 'PhotonQ Off'
+
+        col1_gen_des, col2_gen_des = st.columns(2)
+
+        with col1_gen_des:
+
+            st.write('PhotonQ operation mode - ' + conection_message)
+
+        with col2_gen_des:
+
+            # Close connection
+            close = st.button(
+                'Close connection', disabled=not st.session_state['pa_init'])  # , on_click=fina_loop)
+
+        # setup svg
+        render_svg_setup()
+
+        if 'code_display_PhotonQ' not in st.session_state:
+            st.session_state['code_display_PhotonQ'] = st.empty()
 
     else:
 

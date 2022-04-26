@@ -8,7 +8,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def login(useremail, userpassword):
 
-    url = "https://photonq.at/api/login"
+    url = "https://quco.exp.univie.ac.at/api/login"
 
     payload = {'username': useremail,
                'password': userpassword}
@@ -30,7 +30,7 @@ def login(useremail, userpassword):
 def getexp_fromqueue(token):
     """ """
     auth_token = "Token " + token
-    url = "https://photonq.at/api/experiments/queue"
+    url = "https://quco.exp.univie.ac.at/api/experiments/queue"
 
     payload = {}
     headers = {
@@ -49,7 +49,7 @@ def getexp_fromqueue(token):
 def poststatus_running(token, experimentId):
     """ """
     auth_token = "Token " + token
-    url = f"https://photonq.at/api/experiments/{experimentId}"
+    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
 
     payload = {'status': 'RUNNING'}
     files = [
@@ -71,7 +71,7 @@ def poststatus_running(token, experimentId):
 def post_result(token, result):
     """ """
     auth_token = "Token " + token
-    url = "https://photonq.at/api/results"
+    url = "https://quco.exp.univie.ac.at/api/results"
     payload = result
     # payload = json.dumps({
     #     "totalCounts": "50000",
@@ -114,7 +114,7 @@ def post_result(token, result):
 def poststatus_done(token, experimentId):
     """ """
     auth_token = "Token " + token
-    url = f"https://photonq.at/api/experiments/{experimentId}"
+    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
 
     payload = {'status': 'DONE'}
     files = [
@@ -133,7 +133,7 @@ def poststatus_done(token, experimentId):
 
 def poststatus_failed(token, experimentId):
     """ """
-    url = f"https://photonq.at/api/experiments/{experimentId}"
+    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
 
     payload = {'status': 'FAILED'}
     files = [

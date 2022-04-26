@@ -20,17 +20,12 @@ class Timetagger:
         tt:     timetagger
         '''
         self.ttn = createTimeTaggerNetwork(address)
-        # self.channels = [*ttDic]
+        self.channels = [*ttDic]
         self.ttDicInv = {str(v): k for k, v in ttDic.items()}
 
     def countrate(self, path: int, pol: int):
 
-        mssg = 'Timetagger.countrates :: '
-
-        tt_channel = self.ttDicInv[str([path, pol])]
-
-        # print(mssg + "Addressing channel " +
-        #       str([self.ttDicInv[str([path, pol])]]))
+        mssg = 'Timetagger.countrate :: '
 
         ctr = Countrate(self.ttn, [self.ttDicInv[str([path, pol])]])
 
@@ -40,13 +35,41 @@ class Timetagger:
         # detId = [*map(ttDic.get, self.channels)]
 
         # self.ctrDataDic = {str(detId[i]): ctrData[i]
-        #                   for i in range(len(detId))}
+        #                    for i in range(len(detId))}
 
-        # freeTimeTagger(self.ttn)
+        # print(mssg + "Countrates: " + str(ctrData))
 
-        print(mssg + "Channel " + str(tt_channel) + "countrate: " + str(ctrData))
+        freeTimeTagger(self.ttn)
+
+        print(mssg + "Detector " +
+              str([path, pol]) + "countrate: " + str(ctrData))
 
         return ctrData
+
+    def coincidencerate(self, detectorList: list):
+
+        mssg = 'Timetagger.coincidencerate :: '
+
+        ttChannelList = [
+            *map(lambda det: self.ttDicInv[str([det[0], det[1]])], detectorList)]
+
+        print(ttChannelList)
+
+        coinc = Coincidences(self.ttn, [[7, 8]], coincidenceWindow=10000,
+                             timestamp=CoincidenceTimestamp.ListedFirst)
+        coinc_chans = coinc.getChannels()
+
+        rate = Countrate(self.ttn, coinc_chans)
+        rate.startFor(int(1e12), clear=True)
+        rate.waitUntilFinished()
+
+        ccData = rate.getData()
+
+        print(mssg + "Coincidences count rate:" + str(ccData))
+
+        freeTimeTagger(self.ttn)
+
+        return ccData
 
     def close(self):
         freeTimeTagger(self.ttn)

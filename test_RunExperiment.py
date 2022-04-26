@@ -11,7 +11,7 @@ d = os.path.join(d, 'Experiments', exp_file)
 with open(d, "r") as read_file:
     exp_json = json.load(read_file)
 
-runx = RunExperiment(exp_json, "AAAA")
+runx = RunExperiment(exp_json, "XD")
 
 
 print("-------------------------------------------------R")
