@@ -77,7 +77,7 @@ def circuit_12(alpha, beta, theta1, phi1, theta2, phi2):
     qc.add_gate("SNOT", targets=[1])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
-
+    print(init_state)
     result = qc.run(state=init_state)
 
     results = measure_two(state=result, theta1=theta1,

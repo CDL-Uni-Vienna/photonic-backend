@@ -51,8 +51,8 @@ def Mainloop(on_time):
                     circuitId=task["circuitId"], ComputeSettings=task["ComputeSettings"])
                 print(mssg + "Experiment performed")
                 # Here: retrieve result
-                print(mssg + str(runx.results))
-                #result = json.dumps(runx.results)
+                print(mssg + str(runx))
+                # result = json.dumps(runx.results)
                 result = json.dumps({
                     "experiment": experimentId,
                     "totalCounts": 50000,
