@@ -1,4 +1,5 @@
 from qutip_simulation.circuits import *
+import numpy as np
 
 
 def execute(circuitId, ComputeSettings):
@@ -11,20 +12,20 @@ def execute(circuitId, ComputeSettings):
     if id in [5, 7, 11]:
         theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
-        theta1 = float(theta1_str)
-        phi1 = float(phi1_str)
+        theta1 = float(theta1_str)*2*np.pi/360
+        phi1 = float(phi1_str)*2*np.pi/360
 
         if id == 5:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
-            alpha = float(alpha_str)
+            alpha = float(alpha_str)*2*np.pi/360
             res = circuit_5(alpha=alpha, theta1=theta1,
                             phi1=phi1)
 
         if id == 7:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
-            alpha = float(alpha_str)
-            beta = float(beta_str)
+            alpha = float(alpha_str)*2*np.pi/360
+            beta = float(beta_str)*2*np.pi/360
             res = circuit_7(alpha=alpha, beta=beta, theta1=theta1,
                             phi1=phi1)
 
@@ -32,9 +33,9 @@ def execute(circuitId, ComputeSettings):
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
             gamma_str = ComputeSettings["qubitComputing"]["circuitAngles"][2]["circuitAngleValue"]
-            alpha = float(alpha_str)
-            beta = float(beta_str)
-            gamma = float(gamma_str)
+            alpha = float(alpha_str)*2*np.pi/360
+            beta = float(beta_str)*2*np.pi/360
+            gamma = float(gamma_str)*2*np.pi/360
             res = circuit_11(alpha=alpha, beta=beta, gamma=gamma, theta1=theta1,
                              phi1=phi1)
 
@@ -45,10 +46,10 @@ def execute(circuitId, ComputeSettings):
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
         theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
         phi2_str = ComputeSettings["encodedQubitMeasurements"][1]["phi"]
-        theta1 = float(theta1_str)
-        phi1 = float(phi1_str)
-        theta2 = float(theta2_str)
-        phi2 = float(phi2_str)
+        theta1 = float(theta1_str)*2*np.pi/360
+        phi1 = float(phi1_str)*2*np.pi/360
+        theta2 = float(theta2_str)*2*np.pi/360
+        phi2 = float(phi2_str)*2*np.pi/360
 
         if id == 6:
             res = circuit_6(theta1=theta1,
@@ -56,7 +57,7 @@ def execute(circuitId, ComputeSettings):
 
         if id in [8, 9]:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
-            alpha = float(alpha_str)
+            alpha = float(alpha_str)*2*np.pi/360
 
             if id == 8:
                 res = circuit_8(alpha=alpha, theta1=theta1,
@@ -68,8 +69,8 @@ def execute(circuitId, ComputeSettings):
         if id in [12, 13, 14, 19]:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
-            alpha = float(alpha_str)
-            beta = float(beta_str)
+            alpha = float(alpha_str)*2*np.pi/360
+            beta = float(beta_str)*2*np.pi/360
 
             if id == 12:
                 res = circuit_12(alpha=alpha, beta=beta, theta1=theta1,

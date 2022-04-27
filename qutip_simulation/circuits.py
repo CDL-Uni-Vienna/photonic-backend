@@ -100,13 +100,13 @@ def measure_two(state, theta1, phi1, theta2, phi2):
 def circuit_5(alpha, theta1, phi1):
     qc = QubitCircuit(N=1)
     qc.add_gate("SNOT", targets=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
     qc.add_gate("SNOT", targets=[0])
 
     init_state = basis(2, 0)
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_one(state=result, theta1=theta1,
                           phi1=phi1)
     return results
@@ -130,8 +130,8 @@ def circuit_6(theta1, phi1, theta2, phi2):
 def circuit_7(alpha, beta, theta1, phi1):
     qc = QubitCircuit(N=1)
     qc.add_gate("SNOT", targets=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
-    qc.add_gate("RX", targets=[0], arg_value=beta)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
+    qc.add_gate("RX", targets=[0], arg_value=-beta)
 
     init_state = basis(2, 0)
     print(init_state)
@@ -146,7 +146,7 @@ def circuit_8(alpha, theta1, phi1, theta2, phi2):
     qc = QubitCircuit(N=2)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
-    qc.add_gate("RZ", targets=[1], arg_value=alpha)
+    qc.add_gate("RZ", targets=[1], arg_value=-alpha)
     qc.add_gate("SNOT", targets=[1])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
 
@@ -164,7 +164,7 @@ def circuit_9(alpha, theta1, phi1, theta2, phi2):
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
-    qc.add_gate("RZ", targets=[1], arg_value=alpha)
+    qc.add_gate("RZ", targets=[1], arg_value=-alpha)
     qc.add_gate("SNOT", targets=[1])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
@@ -179,9 +179,9 @@ def circuit_9(alpha, theta1, phi1, theta2, phi2):
 def circuit_11(alpha, beta, gamma, theta1, phi1):
     qc = QubitCircuit(N=1)
     qc.add_gate("SNOT", targets=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
-    qc.add_gate("RX", targets=[0], arg_value=beta)
-    qc.add_gate("RZ", targets=[0], arg_value=gamma)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
+    qc.add_gate("RX", targets=[0], arg_value=-beta)
+    qc.add_gate("RZ", targets=[0], arg_value=-gamma)
     qc.add_gate("SNOT", targets=[0])
 
     init_state = basis(2, 0)
@@ -198,8 +198,8 @@ def circuit_12(alpha, beta, theta1, phi1, theta2, phi2):
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
-    qc.add_gate("RZ", targets=[1], arg_value=beta)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
+    qc.add_gate("RZ", targets=[1], arg_value=-beta)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
 
@@ -216,8 +216,8 @@ def circuit_13(alpha, beta, theta1, phi1, theta2, phi2):
     qc = QubitCircuit(N=2)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
-    qc.add_gate("RZ", targets=[1], arg_value=beta)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
+    qc.add_gate("RZ", targets=[1], arg_value=-beta)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
@@ -235,10 +235,10 @@ def circuit_14(alpha, beta, theta1, phi1, theta2, phi2):
     qc = QubitCircuit(N=2)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
-    qc.add_gate("RZ", targets=[1], arg_value=beta)
+    qc.add_gate("RZ", targets=[1], arg_value=-beta)
     qc.add_gate("SNOT", targets=[1])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
     qc.add_gate("SNOT", targets=[0])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
@@ -254,10 +254,10 @@ def circuit_19(alpha, beta, theta1, phi1, theta2, phi2):
     qc = QubitCircuit(N=2)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("SNOT", targets=[1])
-    qc.add_gate("RZ", targets=[0], arg_value=alpha)
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
     qc.add_gate("SNOT", targets=[0])
     qc.add_gate("CSIGN", targets=[1], controls=[0])
-    qc.add_gate("RZ", targets=[0], arg_value=beta)
+    qc.add_gate("RZ", targets=[0], arg_value=-beta)
     qc.add_gate("SNOT", targets=[0])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
