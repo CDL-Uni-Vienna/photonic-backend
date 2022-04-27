@@ -30,7 +30,7 @@ def measure_one(state, theta1, phi1):
 
     results = {"0": 0, "1": 0}
 
-    for _ in range(1000):
+    for _ in range(10000):
         value, new_state = measure(state, matrix)
         if value == 1:
             results["0"] += 1
@@ -73,7 +73,7 @@ def measure_two(state, theta1, phi1, theta2, phi2):
 
     results = {"00": 0, "01": 0, "10": 0, "11": 0}
 
-    for _ in range(1000):
+    for _ in range(10000):
         value, new_state = measure(state, matrix)
         if value == 1:
             mx = tensor(sigmaz(), identity(2))
@@ -187,7 +187,7 @@ def circuit_11(alpha, beta, gamma, theta1, phi1):
     init_state = basis(2, 0)
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_one(state=result, theta1=theta1,
                           phi1=phi1)
     return results

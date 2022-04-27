@@ -18,7 +18,7 @@ def execute(circuitId, ComputeSettings):
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             alpha = float(alpha_str)
             res = circuit_5(alpha=alpha, theta1=theta1,
-                            phi1=phi1, theta2=theta2, phi2=phi2)
+                            phi1=phi1)
 
         if id == 7:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
@@ -26,7 +26,7 @@ def execute(circuitId, ComputeSettings):
             alpha = float(alpha_str)
             beta = float(beta_str)
             res = circuit_7(alpha=alpha, beta=beta, theta1=theta1,
-                            phi1=phi1, theta2=theta2, phi2=phi2)
+                            phi1=phi1)
 
         if id == 11:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
@@ -36,7 +36,7 @@ def execute(circuitId, ComputeSettings):
             beta = float(beta_str)
             gamma = float(gamma_str)
             res = circuit_11(alpha=alpha, beta=beta, gamma=gamma, theta1=theta1,
-                             phi1=phi1, theta2=theta2, phi2=phi2)
+                             phi1=phi1)
 
     # if circuit encodes 2 logical qubits we always retrieve
     # theta1, phi1, theta2, phi2
