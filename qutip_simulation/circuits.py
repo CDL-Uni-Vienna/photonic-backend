@@ -26,15 +26,18 @@ def measure_one(state, theta1, phi1):
         math.sin(theta1 / 2) * state0
     ).unit()
 
-    matrix = (ket2dm(E1) - ket2dm(E1_orth))
+    Projector0, Projector1 = ket2dm(E1), ket2dm(E1_orth)
+
+    matrix = [Projector0, Projector1]
 
     results = {"0": 0, "1": 0}
 
-    for _ in range(10000):
+    for _ in range(1000):
         value, new_state = measure(state, matrix)
-        if value == 1:
+        print(value)
+        if value == 0:
             results["0"] += 1
-        elif value == -1:
+        elif value == 1:
             results["1"] += 1
         else:
             print("Unexpected error.")
@@ -68,31 +71,28 @@ def measure_two(state, theta1, phi1, theta2, phi2):
         math.sin(theta2 / 2) * state0
     ).unit()
 
-    matrix = tensor((ket2dm(E1) - ket2dm(E1_orth)),
-                    (ket2dm(E2) - ket2dm(E2_orth)))
+    Projector00 = tensor(ket2dm(E1), ket2dm(E2))
+    Projector01 = tensor(ket2dm(E1), ket2dm(E2_orth))
+    Projector10 = tensor(ket2dm(E1_orth), ket2dm(E2))
+    Projector11 = tensor(ket2dm(E1_orth), ket2dm(E2_orth))
+
+    matrix = [Projector00, Projector01, Projector10, Projector11]
 
     results = {"00": 0, "01": 0, "10": 0, "11": 0}
 
-    for _ in range(10000):
+    for _ in range(1000):
         value, new_state = measure(state, matrix)
-        if value == 1:
-            mx = tensor(sigmaz(), identity(2))
-            val, nstate = measure(new_state, mx)
-            if val == 1:
-                results["00"] += 1
-            elif val == -1:
-                results["11"] += 1
-            else:
-                print("Unexpected error.")
-        elif value == -1:
-            mx = tensor(sigmaz(), identity(2))
-            val, nstate = measure(new_state, mx)
-            if val == 1:
-                results["01"] += 1
-            elif val == -1:
-                results["10"] += 1
-            else:
-                print("Unexpected error.")
+        # print(value)
+        if value == 0:
+            results["00"] += 1
+        elif value == 1:
+            results["01"] += 1
+        elif value == 2:
+            results["10"] += 1
+        elif value == 3:
+            results["11"] += 1
+        else:
+            print("Unexpected error.")
 
     return results
 
@@ -121,7 +121,7 @@ def circuit_6(theta1, phi1, theta2, phi2):
     init_state = tensor(basis(2, 0), basis(2, 0))
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -136,7 +136,7 @@ def circuit_7(alpha, beta, theta1, phi1):
     init_state = basis(2, 0)
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_one(state=result, theta1=theta1,
                           phi1=phi1)
     return results
@@ -153,7 +153,7 @@ def circuit_8(alpha, theta1, phi1, theta2, phi2):
     init_state = tensor(basis(2, 0), basis(2, 0))
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -170,7 +170,7 @@ def circuit_9(alpha, theta1, phi1, theta2, phi2):
     init_state = tensor(basis(2, 0), basis(2, 0))
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -206,7 +206,7 @@ def circuit_12(alpha, beta, theta1, phi1, theta2, phi2):
     init_state = tensor(basis(2, 0), basis(2, 0))
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -223,9 +223,9 @@ def circuit_13(alpha, beta, theta1, phi1, theta2, phi2):
     qc.add_gate("CSIGN", targets=[1], controls=[0])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
-
+    print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -242,9 +242,9 @@ def circuit_14(alpha, beta, theta1, phi1, theta2, phi2):
     qc.add_gate("SNOT", targets=[0])
 
     init_state = tensor(basis(2, 0), basis(2, 0))
-
+    print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
@@ -263,7 +263,7 @@ def circuit_19(alpha, beta, theta1, phi1, theta2, phi2):
     init_state = tensor(basis(2, 0), basis(2, 0))
     print(init_state)
     result = qc.run(state=init_state)
-
+    print(result)
     results = measure_two(state=result, theta1=theta1,
                           phi1=phi1, theta2=theta2, phi2=phi2)
     return results
