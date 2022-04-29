@@ -1,3 +1,4 @@
+from unittest import result
 from RestCalls import rest_calls_prod, passwords
 import json
 import time
@@ -46,14 +47,15 @@ def Mainloop(on_time):
                     token, experimentId)
 
                 # For future: include test of setup/, calibration/validation
-                # Here: execute task
-                runx = execute(
+                # Here: execute task - pass circuitId and ComputeSettings
+                # execute() returns experimental results from circuits
+                result = execute(
                     circuitId=task["circuitId"], ComputeSettings=task["ComputeSettings"])
+
                 print(mssg + "Experiment performed")
-                # Here: retrieve result
-                print(mssg + str(runx))
-                # result = json.dumps(runx.results)
-                result = json.dumps({
+                print(mssg + str(result))
+
+                result_data = json.dumps({
                     "experiment": experimentId,
                     "totalCounts": 50000,
                     "numberOfDetectors": 4,
@@ -61,6 +63,9 @@ def Mainloop(on_time):
                     "totalTime": 3,
                     "experimentData": {
                         "countratePerDetector": {
+                            # simulation with QuTip doesnt know single detector
+                            # countrates, thus 1 is filled as placeholder since
+                            # fields are validated against positive integer
                             "d1": 1,
                             "d2": 1,
                             "d3": 1,
@@ -70,13 +75,15 @@ def Mainloop(on_time):
                             "d7": 1,
                             "d8": 1
                         },
-                        "coincidenceCounts": runx
+                        "coincidenceCounts": result
                     }
                 })
-                print(mssg + "Results determined")
+                print(mssg + "Result data determined")
+                # POST result_data back to API
                 rest_calls_prod.post_result(
-                    token, result)
+                    token, result_data)
                 print(mssg + "Results posted to API")
+                # update status of experiment
                 rest_calls_prod.poststatus_done(
                     token, experimentId)
                 print(mssg + "Status of " + experimentId + " updated")
