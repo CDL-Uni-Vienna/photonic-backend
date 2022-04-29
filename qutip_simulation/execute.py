@@ -133,4 +133,28 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_21(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
+    # if circuit encodes 4 logical qubits we always retrieve
+    # theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4
+    if id in [18]:
+        theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
+        phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
+        theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
+        phi2_str = ComputeSettings["encodedQubitMeasurements"][1]["phi"]
+        theta3_str = ComputeSettings["encodedQubitMeasurements"][2]["theta"]
+        phi3_str = ComputeSettings["encodedQubitMeasurements"][2]["phi"]
+        theta4_str = ComputeSettings["encodedQubitMeasurements"][3]["theta"]
+        phi4_str = ComputeSettings["encodedQubitMeasurements"][3]["phi"]
+        theta1 = float(theta1_str)*2*np.pi/360
+        phi1 = float(phi1_str)*2*np.pi/360
+        theta2 = float(theta2_str)*2*np.pi/360
+        phi2 = float(phi2_str)*2*np.pi/360
+        theta3 = float(theta3_str)*2*np.pi/360
+        phi3 = float(phi3_str)*2*np.pi/360
+        theta4 = float(theta4_str)*2*np.pi/360
+        phi4 = float(phi4_str)*2*np.pi/360
+
+        if id == 18:
+            res = circuit_18(theta1=theta1,
+                             phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
+
     return res
