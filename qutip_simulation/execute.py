@@ -40,7 +40,7 @@ def execute(circuitId, ComputeSettings):
             res = circuit_5(alpha=alpha, theta1=theta1,
                             phi1=phi1)
 
-        if id == 7:
+        elif id == 7:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
             alpha = float(alpha_str)*2*np.pi/360
@@ -48,7 +48,7 @@ def execute(circuitId, ComputeSettings):
             res = circuit_7(alpha=alpha, beta=beta, theta1=theta1,
                             phi1=phi1)
 
-        if id == 11:
+        elif id == 11:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
             gamma_str = ComputeSettings["qubitComputing"]["circuitAngles"][2]["circuitAngleValue"]
@@ -58,9 +58,12 @@ def execute(circuitId, ComputeSettings):
             res = circuit_11(alpha=alpha, beta=beta, gamma=gamma, theta1=theta1,
                              phi1=phi1)
 
+        else:
+            print("Unexpected error.")
+
     # if circuit encodes 2 logical qubits we always retrieve
     # theta1, phi1, theta2, phi2
-    if id in [2, 6, 8, 9, 12, 13, 14, 19]:
+    elif id in [2, 6, 8, 9, 12, 13, 14, 19]:
         theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
         theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
@@ -76,11 +79,14 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_2(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
 
-            if id == 6:
+            elif id == 6:
                 res = circuit_6(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
 
-        if id in [8, 9]:
+            else:
+                print("Unexpected error.")
+
+        elif id in [8, 9]:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             alpha = float(alpha_str)*2*np.pi/360
 
@@ -88,11 +94,14 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_8(alpha=alpha, theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
 
-            if id == 9:
+            elif id == 9:
                 res = circuit_9(alpha=alpha, theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
 
-        if id in [12, 13, 14, 19]:
+            else:
+                print("Unexpected error.")
+
+        elif id in [12, 13, 14, 19]:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             beta_str = ComputeSettings["qubitComputing"]["circuitAngles"][1]["circuitAngleValue"]
             alpha = float(alpha_str)*2*np.pi/360
@@ -102,21 +111,27 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_12(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
 
-            if id == 13:
+            elif id == 13:
                 res = circuit_13(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
 
-            if id == 14:
+            elif id == 14:
                 res = circuit_14(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
 
-            if id == 19:
+            elif id == 19:
                 res = circuit_19(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
 
+            else:
+                print("Unexpected error.")
+
+        else:
+            print("Unexpected error.")
+
     # if circuit encodes 3 logical qubits we always retrieve
     # theta1, phi1, theta2, phi2, theta3, phi3
-    if id in [3, 10, 15, 16, 17, 20, 21]:
+    elif id in [3, 10, 15, 16, 17, 20, 21]:
         theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
         theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
@@ -136,11 +151,14 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_3(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-            if id == 10:
+            elif id == 10:
                 res = circuit_10(theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-        if id in [15, 16, 17, 20, 21]:
+            else:
+                print("Unexpected error.")
+
+        elif id in [15, 16, 17, 20, 21]:
             alpha_str = ComputeSettings["qubitComputing"]["circuitAngles"][0]["circuitAngleValue"]
             alpha = float(alpha_str)*2*np.pi/360
 
@@ -148,25 +166,31 @@ def execute(circuitId, ComputeSettings):
                 res = circuit_15(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-            if id == 16:
+            elif id == 16:
                 res = circuit_16(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-            if id == 17:
+            elif id == 17:
                 res = circuit_17(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-            if id == 20:
+            elif id == 20:
                 res = circuit_20(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
-            if id == 21:
+            elif id == 21:
                 res = circuit_21(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
 
+            else:
+                print("Unexpected error.")
+
+        else:
+            print("Unexpected error.")
+
     # if circuit encodes 4 logical qubits we always retrieve
     # theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4
-    if id in [4, 18, 22]:
+    elif id in [4, 18, 22]:
         theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
         theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
@@ -188,12 +212,18 @@ def execute(circuitId, ComputeSettings):
             res = circuit_4(theta1=theta1,
                             phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
 
-        if id == 18:
+        elif id == 18:
             res = circuit_18(theta1=theta1,
                              phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
 
-        if id == 22:
+        elif id == 22:
             res = circuit_22(theta1=theta1,
                              phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
+
+        else:
+            print("Unexpected error.")
+
+    else:
+        print("Unexpected error.")
 
     return res
