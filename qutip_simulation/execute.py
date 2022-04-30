@@ -4,18 +4,28 @@ import numpy as np
 
 def execute(circuitId, ComputeSettings):
     """
-    Function parameters: circuitId, ComputeSettings
+    Function parameters: 
 
-    circuitId: positive integer, identifying the circuit to be executed
+        circuitId, ComputeSettings
 
-    ComputeSettings: JSON dict containing all relevant parameters for computation and
-    (see ComputeSettings model in API specs 
-    https://github.com/zilkf92/cdl-django-webservice/blob/master/cdl_rest_api/models.py)
-    for details)
 
-    All angles are retrieved as sting type 'str' and need conversion to float
+        circuitId: 
+
+            positive integer, identifying the circuit to be executed
+
+
+        ComputeSettings: 
+
+            JSON dict containing all relevant parameters for computation and
+            (see ComputeSettings model in API specs 
+            https://github.com/zilkf92/cdl-django-webservice/blob/master/cdl_rest_api/models.py)
+            for details)
+
+            All angles are retrieved as sting type 'str' and need conversion to float
     """
+
     id = circuitId
+
     # if circuit encodes 1 logical qubit we always retrieve
     # theta1, phi1
     if id in [5, 7, 11]:
@@ -61,9 +71,11 @@ def execute(circuitId, ComputeSettings):
         phi2 = float(phi2_str)*2*np.pi/360
 
         if id in [2, 6]:
+
             if id == 2:
                 res = circuit_2(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
+
             if id == 6:
                 res = circuit_6(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
@@ -75,6 +87,7 @@ def execute(circuitId, ComputeSettings):
             if id == 8:
                 res = circuit_8(alpha=alpha, theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
+
             if id == 9:
                 res = circuit_9(alpha=alpha, theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2)
@@ -88,12 +101,15 @@ def execute(circuitId, ComputeSettings):
             if id == 12:
                 res = circuit_12(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
+
             if id == 13:
                 res = circuit_13(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
+
             if id == 14:
                 res = circuit_14(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
+
             if id == 19:
                 res = circuit_19(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
@@ -115,9 +131,11 @@ def execute(circuitId, ComputeSettings):
         phi3 = float(phi3_str)*2*np.pi/360
 
         if id in [3, 10]:
+
             if id == 3:
                 res = circuit_3(theta1=theta1,
                                 phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+
             if id == 10:
                 res = circuit_10(theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
@@ -129,15 +147,19 @@ def execute(circuitId, ComputeSettings):
             if id == 15:
                 res = circuit_15(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+
             if id == 16:
                 res = circuit_16(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+
             if id == 17:
                 res = circuit_17(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+
             if id == 20:
                 res = circuit_20(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+
             if id == 21:
                 res = circuit_21(alpha=alpha, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
@@ -165,9 +187,11 @@ def execute(circuitId, ComputeSettings):
         if id == 4:
             res = circuit_4(theta1=theta1,
                             phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
+
         if id == 18:
             res = circuit_18(theta1=theta1,
                              phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
+
         if id == 22:
             res = circuit_22(theta1=theta1,
                              phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
