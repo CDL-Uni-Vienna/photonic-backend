@@ -107,4 +107,4 @@ def Mainloop(on_time):
 
 if __name__ == '__main__':
 
-    Mainloop(5)
+    Mainloop(10)

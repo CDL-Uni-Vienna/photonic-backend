@@ -35,7 +35,7 @@ def measure_one(state, theta1, phi1):
 
     for _ in range(1000):
         value, new_state = measure(state, matrix)
-        print(value)
+        # print(value)
         if value == 0:
             results["0"] += 1
         elif value == 1:
