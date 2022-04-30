@@ -9,6 +9,7 @@ from qutip.operators import identity, sigmaz
 
 import math
 import cmath
+import numpy as np
 
 
 def measure_one(state, theta1, phi1):
@@ -300,6 +301,60 @@ def measure_four(state, theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4):
         else:
             print("Unexpected error.")
 
+    return results
+
+
+def circuit_2(theta1, phi1, theta2, phi2):
+    qc = QubitCircuit(N=2)
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("CNOT", targets=[1], controls=[0])
+
+    init_state = tensor(basis(2, 0), basis(2, 0))
+    print(init_state)
+    result = qc.run(state=init_state)
+    print(result)
+    results = measure_two(state=result, theta1=theta1,
+                          phi1=phi1, theta2=theta2, phi2=phi2)
+    return results
+
+
+def circuit_3(theta1, phi1, theta2, phi2, theta3, phi3):
+    qc = QubitCircuit(N=3)
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("CNOT", targets=[1], controls=[0])
+    qc.add_gate("CNOT", targets=[2], controls=[0])
+
+    init_state = tensor(basis(2, 0), basis(2, 0), basis(2, 0))
+    print(init_state)
+    result = qc.run(state=init_state)
+    print(result)
+    results = measure_three(state=result, theta1=theta1,
+                            phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+    return results
+
+
+def circuit_4(theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4):
+    qc = QubitCircuit(N=4)
+    qc.add_gate("X", targets=[0])
+    qc.add_gate("SNOT", targets=[1])
+    qc.add_gate("SNOT", targets=[2])
+    qc.add_gate("SNOT", targets=[3])
+    qc.add_gate("CNOT", targets=[0], controls=[1])
+    qc.add_gate("CNOT", targets=[2], controls=[3])
+    qc.add_gate("CNOT", targets=[0], controls=[2])
+    qc.add_gate("CNOT", targets=[2], controls=[3])
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("SNOT", targets=[1])
+    qc.add_gate("SNOT", targets=[2])
+    qc.add_gate("SNOT", targets=[3])
+    qc.add_gate("PHASEGATE", targets=[3], arg_value=np.pi)
+
+    init_state = tensor(basis(2, 0), basis(2, 0), basis(2, 0), basis(2, 0))
+    print(init_state)
+    result = qc.run(state=init_state)
+    print(result)
+    results = measure_four(state=result, theta1=theta1,
+                           phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
     return results
 
 
@@ -603,4 +658,21 @@ def circuit_21(alpha, theta1, phi1, theta2, phi2, theta3, phi3):
     print(result)
     results = measure_three(state=result, theta1=theta1,
                             phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3)
+    return results
+
+
+def circuit_22(theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4):
+    qc = QubitCircuit(N=4)
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("SNOT", targets=[2])
+    qc.add_gate("CNOT", targets=[1], controls=[0])
+    qc.add_gate("CNOT", targets=[3], controls=[2])
+    qc.add_gate("CSIGN", targets=[2], controls=[1])
+
+    init_state = tensor(basis(2, 0), basis(2, 0), basis(2, 0), basis(2, 0))
+    print(init_state)
+    result = qc.run(state=init_state)
+    print(result)
+    results = measure_four(state=result, theta1=theta1,
+                           phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
     return results
