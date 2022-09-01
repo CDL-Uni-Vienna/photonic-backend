@@ -1,0 +1,107 @@
+Date : 2022-04-30 17:38:47
+Directory : c:\Users\zilkf\Documents\Workspace\photonic-backend
+Total : 68 files,  5804 codes, 3945 comments, 1268 blanks, all 11017 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| Python           |         53 |      3,838 |      3,944 |      1,265 |      9,047 |
+| XML              |          1 |      1,143 |          1 |          2 |      1,146 |
+| JSON             |         12 |        814 |          0 |          0 |        814 |
+| pip requirements |          1 |          8 |          0 |          0 |          8 |
+| Markdown         |          1 |          1 |          0 |          1 |          2 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                        | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                           |         68 |      5,804 |      3,945 |      1,268 |     11,017 |
+| Calibration                                                                                 |          8 |         18 |          1 |          7 |         26 |
+| CircuitLib                                                                                  |          2 |        714 |          0 |          0 |        714 |
+| Experiments                                                                                 |          3 |         93 |          0 |          0 |         93 |
+| RestCalls                                                                                   |          7 |        235 |         91 |         93 |        419 |
+| RestCalls\RestCallsOld                                                                      |          2 |         88 |         39 |         25 |        152 |
+| Settings                                                                                    |          5 |        110 |         36 |         19 |        165 |
+| Swabian                                                                                     |          6 |        151 |         74 |         55 |        280 |
+| Tests                                                                                       |          8 |         97 |         34 |         42 |        173 |
+| ThorLabsMotors                                                                              |          2 |      1,313 |      3,285 |        275 |      4,873 |
+| appResources                                                                                |          1 |      1,143 |          1 |          2 |      1,146 |
+| qutip_simulation                                                                            |          3 |        723 |         32 |        161 |        916 |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                    | language         | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\CalibrationTools.py                     | Python           |        262 |         76 |        123 |        461 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[-1, 0]].json           | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[-2, 0]].json           | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[-3, 0]].json           | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[-4, 0]].json           | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[1, 0], [1, 1]].json    | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[2, 0], [2, 1]].json    | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\cal[[3, 0], [3, 1]].json    | JSON             |          1 |          0 |          0 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Calibration\get_calibrationAngles.py    | Python           |         11 |          1 |          7 |         19 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\CircuitLib\circuits4Dv003.json          | JSON             |        338 |          0 |          0 |        338 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\CircuitLib\circuits4Dv004.json          | JSON             |        376 |          0 |          0 |        376 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlExperiment.py                    | Python           |        119 |         15 |         34 |        168 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlPlatesArray.py                   | Python           |        149 |         41 |         76 |        266 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlPowermeter.py                    | Python           |         34 |         10 |          8 |         52 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlRemoteExec.py                    | Python           |         62 |         11 |         36 |        109 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlRunExperiment.py                 | Python           |         31 |          2 |         13 |         46 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlTimetagger.py                    | Python           |         43 |         43 |         44 |        130 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ControlWaveplate.py                     | Python           |         30 |          0 |          7 |         37 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Experiments\exp1.json                   | JSON             |         24 |          0 |          0 |         24 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Experiments\exp11.json                  | JSON             |         34 |          0 |          0 |         34 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Experiments\exp12.json                  | JSON             |         35 |          0 |          0 |         35 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\README.md                               | Markdown         |          1 |          0 |          1 |          2 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\RestCallsOld\execute.py       | Python           |         38 |         15 |          9 |         62 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\RestCallsOld\rest.py          | Python           |         50 |         24 |         16 |         90 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\passwords.py                  | Python           |          2 |          0 |          1 |          3 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\rest_calls.py                 | Python           |         46 |         10 |         17 |         73 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\rest_calls_prod.py            | Python           |         75 |         38 |         38 |        151 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\rest_script.py                | Python           |         16 |          2 |          8 |         26 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\RestCalls\test.py                       | Python           |          8 |          2 |          4 |         14 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Settings\com_settings.py                | Python           |          5 |          6 |          4 |         15 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Settings\local_settings.py              | Python           |          3 |          4 |          3 |         10 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Settings\measurement_settings.py        | Python           |         94 |         21 |          9 |        124 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Settings\offset_settings.py             | Python           |          1 |          3 |          2 |          6 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Settings\remote_settings.py             | Python           |          7 |          2 |          1 |         10 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\A_create_measurement_counter.py | Python           |         34 |         15 |         10 |         59 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\client.py                       | Python           |         15 |          4 |          2 |         21 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\hello_world.py                  | Python           |         30 |         23 |         15 |         68 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\hello_world_client.py           | Python           |         30 |         24 |         15 |         69 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\remote_getData.py               | Python           |         29 |          8 |         12 |         49 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Swabian\server.py                       | Python           |         13 |          0 |          1 |         14 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\calibration.py                    | Python           |          0 |          0 |          1 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\testSerial.py                     | Python           |         10 |          1 |          5 |         16 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_census.py                    | Python           |         23 |          0 |         14 |         37 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_powermeter.py                | Python           |          4 |         11 |          6 |         21 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_rest.py                      | Python           |          3 |          1 |          2 |          6 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_serial_motors.py             | Python           |         22 |         15 |          4 |         41 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_tomography.py                | Python           |         31 |          6 |          8 |         45 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\Tests\test_waveplates.py                | Python           |          4 |          0 |          2 |          6 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ThorLabsMotors\PowerMeter.py            | Python           |        990 |      3,253 |        193 |      4,436 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\ThorLabsMotors\RotationMount.py         | Python           |        323 |         32 |         82 |        437 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\__init__.py                             | Python           |          0 |          0 |          1 |          1 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\app.py                                  | Python           |        161 |         39 |        103 |        303 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\appResources\setup.svg                  | XML              |      1,143 |          1 |          2 |      1,146 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\loop.py                                 | Python           |         61 |         10 |         20 |         91 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\loop_sim.py                             | Python           |         75 |         14 |         22 |        111 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\qutip_simulation\circuits.py            | Python           |        562 |          4 |        113 |        679 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\qutip_simulation\execute.py             | Python           |        157 |         28 |         45 |        230 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\qutip_simulation\test.py                | Python           |          4 |          0 |          3 |          7 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\requirements.txt                        | pip requirements |          8 |          0 |          0 |          8 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_Calibration.py                     | Python           |          4 |         74 |         35 |        113 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_Experiment.py                      | Python           |         12 |          4 |          9 |         25 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_PlatesArray.py                     | Python           |          7 |         16 |          7 |         30 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_RemoteExec.py                      | Python           |         10 |          0 |          6 |         16 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_RunExperiment.py                   | Python           |         12 |          0 |          7 |         19 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_Timetagger.py                      | Python           |          4 |          0 |          4 |          8 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_Timetagger_Old.py                  | Python           |         32 |          6 |         14 |         52 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\test_parmikoSSH.py                      | Python           |         15 |         22 |         18 |         55 |
+| c:\Users\zilkf\Documents\Workspace\photonic-backend\utilFunc.py                             | Python           |         75 |          8 |         26 |        109 |
+| Total                                                                                       |                  |      5,804 |      3,945 |      1,268 |     11,017 |
++---------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

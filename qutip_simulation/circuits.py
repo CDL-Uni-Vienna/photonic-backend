@@ -676,3 +676,28 @@ def circuit_22(theta1, phi1, theta2, phi2, theta3, phi3, theta4, phi4):
     results = measure_four(state=result, theta1=theta1,
                            phi1=phi1, theta2=theta2, phi2=phi2, theta3=theta3, phi3=phi3, theta4=theta4, phi4=phi4)
     return results
+
+
+"""
+Adding the circuit for the Box cluster
+"""
+
+
+def circuit_23(alpha, beta, theta1, phi1, theta2, phi2):
+    qc = QubitCircuit(N=2)
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("SNOT", targets=[1])
+    qc.add_gate("CSIGN", targets=[1], controls=[0])
+    qc.add_gate("RZ", targets=[0], arg_value=-alpha)
+    qc.add_gate("RZ", targets=[1], arg_value=-beta)
+    qc.add_gate("SNOT", targets=[0])
+    qc.add_gate("SNOT", targets=[1])
+    qc.add_gate("CSIGN", targets=[1], controls=[0])
+
+    init_state = tensor(basis(2, 0), basis(2, 0))
+    print(init_state)
+    result = qc.run(state=init_state)
+    print(result)
+    results = measure_two(state=result, theta1=theta1,
+                          phi1=phi1, theta2=theta2, phi2=phi2)
+    return results

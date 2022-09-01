@@ -63,7 +63,7 @@ def execute(circuitId, ComputeSettings):
 
     # if circuit encodes 2 logical qubits we always retrieve
     # theta1, phi1, theta2, phi2
-    elif id in [2, 6, 8, 9, 12, 13, 14, 19]:
+    elif id in [2, 6, 8, 9, 12, 13, 14, 19, 23]:
         theta1_str = ComputeSettings["encodedQubitMeasurements"][0]["theta"]
         phi1_str = ComputeSettings["encodedQubitMeasurements"][0]["phi"]
         theta2_str = ComputeSettings["encodedQubitMeasurements"][1]["theta"]
@@ -121,6 +121,10 @@ def execute(circuitId, ComputeSettings):
 
             elif id == 19:
                 res = circuit_19(alpha=alpha, beta=beta, theta1=theta1,
+                                 phi1=phi1, theta2=theta2, phi2=phi2)
+
+            elif id == 23:
+                res = circuit_23(alpha=alpha, beta=beta, theta1=theta1,
                                  phi1=phi1, theta2=theta2, phi2=phi2)
 
             else:
